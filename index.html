@@ -13,188 +13,212 @@ body{font-family:'Press Start 2P',monospace;background:#0a0014;color:#fff;min-he
 #bg-video{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.28;z-index:0;pointer-events:none;display:none;}
 .scanlines{position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.08) 0px,rgba(0,0,0,0.08) 1px,transparent 1px,transparent 3px);z-index:1;pointer-events:none;}
 
-#quiz-wrap{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem;z-index:3;}
-.content{width:100%;max-width:720px;position:relative;}
-.arcade-frame{border:3px solid #cc44ff;background:rgba(8,0,20,0.90);padding:1.5rem 1.5rem 2rem;position:relative;box-shadow:0 0 30px rgba(180,0,255,0.4),0 0 60px rgba(100,0,200,0.2),inset 0 0 20px rgba(150,0,255,0.05);}
-.arcade-frame::before{content:'';position:absolute;top:5px;left:5px;right:5px;bottom:5px;border:1px solid rgba(200,80,255,0.2);pointer-events:none;}
-
-.hud{display:flex;justify-content:space-between;font-size:6px;color:#cc44ff;letter-spacing:1px;margin-bottom:1rem;text-shadow:0 0 8px #cc44ff;}
-.progress-rail{width:100%;height:6px;background:#1a0030;border:1px solid #440066;margin-bottom:1.4rem;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,#cc44ff,#ff44cc);transition:width .35s ease;box-shadow:0 0 8px #cc44ff;}
-
-/* ── JOEY LAYOUT ── */
-.joey-layout{display:flex;gap:16px;align-items:flex-end;min-height:240px;}
-.joey-side{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:100px;position:relative;}
-.joey-name{font-size:5px;color:#cc44ff;text-shadow:0 0 6px #cc44ff;margin-top:6px;letter-spacing:1px;text-align:center;}
-
-/* ── JOEY IMAGE STATES ── */
-#joey-gif{
-  width:100px;
-  height:auto;
-  image-rendering:pixelated;
-  display:block;
-  /* Walk-in starts offscreen left */
+/* ── FULL SCREEN LAYOUT ── */
+#quiz-wrap{
   position:relative;
-}
-#joey-idle-img{
-  width:100px;
-  height:auto;
-  image-rendering:pixelated;
-  display:none;
-  animation:joey-breathe 1.8s ease-in-out infinite;
-}
-@keyframes joey-breathe{
-  0%,100%{transform:scaleY(1) translateY(0);}
-  50%{transform:scaleY(0.97) translateY(1px);}
-}
-
-/* ── INTRO SCREEN ── */
-#intro-screen{
+  min-height:100vh;
+  width:100%;
   display:flex;
   flex-direction:column;
   align-items:center;
-  text-align:center;
+  justify-content:center;
+  padding:2rem 2rem;
+  z-index:3;
 }
-.brand-title{display:block;font-size:7px;color:#ff88ff;letter-spacing:3px;margin-bottom:.4rem;text-shadow:0 0 10px #ff44ff,0 0 20px #cc00ff;}
-.big-title{font-size:10px;color:#fff;letter-spacing:2px;line-height:2.2;display:block;margin-bottom:.3rem;text-shadow:0 0 10px #cc44ff,0 0 30px #8800ff;}
-.px-divider{width:100%;height:2px;background:repeating-linear-gradient(90deg,#cc44ff 0px,#cc44ff 6px,transparent 6px,transparent 12px);margin:1.2rem 0;opacity:.3;}
+.content{
+  width:100%;
+  max-width:100%;        /* full width */
+  position:relative;
+}
+.arcade-frame{
+  border:4px solid #cc44ff;
+  background:rgba(8,0,20,0.90);
+  padding:2.5rem 3rem 3rem;
+  position:relative;
+  box-shadow:0 0 40px rgba(180,0,255,0.4),0 0 80px rgba(100,0,200,0.2),inset 0 0 30px rgba(150,0,255,0.05);
+  min-height:90vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.arcade-frame::before{
+  content:'';position:absolute;top:7px;left:7px;right:7px;bottom:7px;
+  border:1px solid rgba(200,80,255,0.2);pointer-events:none;
+}
+
+/* ── HUD ── */
+.hud{display:flex;justify-content:space-between;font-size:10px;color:#cc44ff;letter-spacing:2px;margin-bottom:1.2rem;text-shadow:0 0 8px #cc44ff;}
+
+/* ── PROGRESS ── */
+.progress-rail{width:100%;height:10px;background:#1a0030;border:1px solid #440066;margin-bottom:2rem;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#cc44ff,#ff44cc);transition:width .35s ease;box-shadow:0 0 10px #cc44ff;}
+
+/* ── JOEY LAYOUT ── */
+.joey-layout{
+  display:flex;
+  gap:40px;
+  align-items:flex-end;
+  min-height:380px;
+}
+.joey-side{
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  width:200px;
+}
+.joey-name{font-size:9px;color:#cc44ff;text-shadow:0 0 6px #cc44ff;margin-top:10px;letter-spacing:2px;text-align:center;}
+
+/* ── INTRO SCREEN ── */
+#intro-screen{display:flex;flex-direction:column;align-items:center;text-align:center;}
+.brand-title{display:block;font-size:13px;color:#ff88ff;letter-spacing:4px;margin-bottom:.6rem;text-shadow:0 0 14px #ff44ff,0 0 28px #cc00ff;}
+.big-title{font-size:20px;color:#fff;letter-spacing:3px;line-height:2;display:block;margin-bottom:.4rem;text-shadow:0 0 14px #cc44ff,0 0 40px #8800ff;}
+.px-divider{width:100%;height:3px;background:repeating-linear-gradient(90deg,#cc44ff 0px,#cc44ff 8px,transparent 8px,transparent 16px);margin:1.5rem 0;opacity:.3;}
 
 /* ── INTRO JOEY ROW ── */
 #intro-joey-row{
   display:flex;
-  gap:20px;
+  gap:40px;
   align-items:flex-end;
   justify-content:center;
   width:100%;
-  margin:1rem 0 1.2rem;
-  min-height:160px;
+  margin:1.5rem 0 1.8rem;
+  min-height:240px;
 }
-#intro-joey-wrap{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  position:relative;
-}
+#intro-joey-wrap{display:flex;flex-direction:column;align-items:center;position:relative;}
 #intro-gif{
-  width:100px;
-  height:auto;
-  image-rendering:pixelated;
-  /* start offscreen to the left */
-  transform:translateX(-300px);
-  transition:transform 0.8s cubic-bezier(.22,1,.36,1);
+  width:200px;height:auto;image-rendering:pixelated;
+  transform:translateX(-600px);
+  transition:transform 0.9s cubic-bezier(.22,1,.36,1);
 }
 #intro-idle{
-  width:100px;
-  height:auto;
-  image-rendering:pixelated;
-  display:none;
+  width:200px;height:auto;image-rendering:pixelated;display:none;
   animation:joey-breathe 1.8s ease-in-out infinite;
 }
+@keyframes joey-breathe{0%,100%{transform:scaleY(1) translateY(0);}50%{transform:scaleY(0.97) translateY(2px);}}
 
-/* ── SPEECH BUBBLE (intro) ── */
+/* ── INTRO BUBBLE ── */
 #intro-bubble{
-  position:relative;
-  background:rgba(40,0,80,0.95);
-  border:2px solid #cc44ff;
-  padding:.9rem 1.1rem;
-  max-width:280px;
-  text-align:left;
-  box-shadow:0 0 14px rgba(180,0,255,0.3);
-  opacity:0;
-  transform:translateY(8px);
-  transition:opacity 0.5s ease, transform 0.5s ease;
+  position:relative;background:rgba(40,0,80,0.95);border:3px solid #cc44ff;
+  padding:1.4rem 1.8rem;max-width:480px;text-align:left;
+  box-shadow:0 0 20px rgba(180,0,255,0.3);
+  opacity:0;transform:translateY(10px);
+  transition:opacity 0.5s ease,transform 0.5s ease;
 }
 #intro-bubble.visible{opacity:1;transform:translateY(0);}
-#intro-bubble::before{content:'';position:absolute;left:-14px;bottom:24px;width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-right:14px solid #cc44ff;}
-#intro-bubble::after{content:'';position:absolute;left:-10px;bottom:25px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:12px solid rgba(40,0,80,0.95);}
-#intro-bubble p{font-size:7px;line-height:2.2;color:#fff;}
+#intro-bubble::before{content:'';position:absolute;left:-18px;bottom:30px;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:18px solid #cc44ff;}
+#intro-bubble::after{content:'';position:absolute;left:-13px;bottom:31px;width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:14px solid rgba(40,0,80,0.95);}
+#intro-bubble p{font-size:11px;line-height:2.4;color:#fff;}
 
 /* ── START BUTTON AREA ── */
-#intro-cta{
-  opacity:0;
-  transform:translateY(8px);
-  transition:opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
-}
+#intro-cta{opacity:0;transform:translateY(10px);transition:opacity 0.5s ease 0.3s,transform 0.5s ease 0.3s;}
 #intro-cta.visible{opacity:1;transform:translateY(0);}
-.lives{color:#ff4d4d;font-size:12px;letter-spacing:6px;text-shadow:0 0 8px #ff0000;}
-.start-btn{font-family:'Press Start 2P',monospace;font-size:8px;color:#fff;background:linear-gradient(135deg,#7700cc,#bb00ff);border:3px solid #ee88ff;padding:14px 32px;cursor:pointer;letter-spacing:2px;box-shadow:0 0 20px rgba(180,0,255,0.7),5px 5px 0 #330066;margin-top:1.2rem;display:inline-block;text-shadow:0 0 8px rgba(255,255,255,0.8);}
-.start-btn:active{transform:translate(4px,4px);box-shadow:none;}
+.start-btn{
+  font-family:'Press Start 2P',monospace;font-size:14px;color:#fff;
+  background:linear-gradient(135deg,#7700cc,#bb00ff);border:4px solid #ee88ff;
+  padding:20px 48px;cursor:pointer;letter-spacing:2px;
+  box-shadow:0 0 28px rgba(180,0,255,0.7),7px 7px 0 #330066;
+  margin-top:1.5rem;display:inline-block;
+  text-shadow:0 0 10px rgba(255,255,255,0.8);
+}
+.start-btn:active{transform:translate(5px,5px);box-shadow:none;}
 .blink{animation:blink 1.1s step-start infinite;}
 @keyframes blink{50%{opacity:0;}}
 
 /* ── QUIZ SPEECH BUBBLE ── */
-.bubble-side{flex:1;display:flex;flex-direction:column;gap:12px;}
-.speech-bubble{position:relative;background:rgba(40,0,80,0.95);border:2px solid #cc44ff;padding:1rem 1.1rem;box-shadow:0 0 14px rgba(180,0,255,0.3);}
-.speech-bubble::before{content:'';position:absolute;left:-14px;bottom:28px;width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-right:14px solid #cc44ff;}
-.speech-bubble::after{content:'';position:absolute;left:-10px;bottom:29px;width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:12px solid rgba(40,0,80,0.95);}
-.bubble-label{font-size:5px;color:#ff88ff;letter-spacing:2px;margin-bottom:.5rem;text-shadow:0 0 6px #ff44ff;}
-.bubble-text{font-size:8px;line-height:2.1;color:#fff;text-shadow:0 0 4px rgba(255,255,255,0.2);}
+.bubble-side{flex:1;display:flex;flex-direction:column;gap:16px;}
+.speech-bubble{
+  position:relative;background:rgba(40,0,80,0.95);border:3px solid #cc44ff;
+  padding:1.4rem 1.6rem;box-shadow:0 0 18px rgba(180,0,255,0.3);
+}
+.speech-bubble::before{content:'';position:absolute;left:-18px;bottom:34px;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:18px solid #cc44ff;}
+.speech-bubble::after{content:'';position:absolute;left:-13px;bottom:35px;width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:14px solid rgba(40,0,80,0.95);}
+.bubble-label{font-size:8px;color:#ff88ff;letter-spacing:2px;margin-bottom:.6rem;text-shadow:0 0 6px #ff44ff;}
+.bubble-text{font-size:13px;line-height:2.2;color:#fff;text-shadow:0 0 4px rgba(255,255,255,0.2);}
 
 /* ── OPTION BUTTONS ── */
-.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;}
-.pxbtn{font-family:'Press Start 2P',monospace;font-size:7px;line-height:1.75;color:#fff;background:rgba(60,0,100,0.6);border:2px solid #7722bb;padding:12px 10px;cursor:pointer;text-align:left;position:relative;width:100%;letter-spacing:.2px;transition:all .12s;text-shadow:0 0 4px rgba(255,255,255,0.2);display:flex;align-items:center;gap:8px;}
-.pxbtn::after{content:'';position:absolute;bottom:-4px;right:-4px;width:100%;height:100%;background:#220044;z-index:-1;}
-.pxbtn:hover{background:rgba(180,0,255,0.4);border-color:#cc44ff;box-shadow:0 0 12px rgba(180,0,255,0.5);}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;}
+.pxbtn{
+  font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.75;color:#fff;
+  background:rgba(60,0,100,0.6);border:3px solid #7722bb;
+  padding:18px 14px;cursor:pointer;text-align:left;position:relative;width:100%;
+  letter-spacing:.2px;transition:all .12s;text-shadow:0 0 4px rgba(255,255,255,0.2);
+  display:flex;align-items:center;gap:12px;
+}
+.pxbtn::after{content:'';position:absolute;bottom:-5px;right:-5px;width:100%;height:100%;background:#220044;z-index:-1;}
+.pxbtn:hover{background:rgba(180,0,255,0.4);border-color:#cc44ff;box-shadow:0 0 16px rgba(180,0,255,0.5);}
 .pxbtn:hover::after{background:#550099;}
-.pxbtn:active{transform:translate(3px,3px);}
+.pxbtn:active{transform:translate(4px,4px);}
 .pxbtn:active::after{display:none;}
-.pxbtn .ltr{color:#ff88ff;font-size:7px;text-shadow:0 0 6px #ff44ff;flex-shrink:0;min-width:16px;}
+.pxbtn .ltr{color:#ff88ff;font-size:12px;text-shadow:0 0 6px #ff44ff;flex-shrink:0;min-width:20px;}
 .pxbtn:hover .ltr{color:#fff;}
-.pxbtn.selected{background:rgba(180,0,255,0.5);border-color:#cc44ff;box-shadow:0 0 12px rgba(180,0,255,0.6);}
-.yes-no-row{display:flex;gap:10px;margin-top:4px;}
+.pxbtn.selected{background:rgba(180,0,255,0.5);border-color:#cc44ff;box-shadow:0 0 16px rgba(180,0,255,0.6);}
+.yes-no-row{display:flex;gap:14px;margin-top:6px;}
 .yes-no-row .pxbtn{flex:1;justify-content:center;text-align:center;}
 
 /* ── CITY DROPDOWN ── */
-.city-wrap{margin-top:8px;}
-.city-label{font-size:5px;color:#bb88ff;letter-spacing:1px;margin-bottom:.4rem;}
+.city-wrap{margin-top:10px;}
+.city-label{font-size:8px;color:#bb88ff;letter-spacing:1px;margin-bottom:.5rem;}
 .select-wrap{position:relative;}
-.city-select{font-family:'Press Start 2P',monospace;font-size:6.5px;width:100%;background:#1a0030;color:#fff;border:2px solid #7722bb;padding:10px 9px;cursor:pointer;appearance:none;-webkit-appearance:none;outline:none;}
-.city-select:focus{border-color:#cc44ff;box-shadow:0 0 8px rgba(180,0,255,0.4);}
+.city-select{
+  font-family:'Press Start 2P',monospace;font-size:11px;width:100%;
+  background:#1a0030;color:#fff;border:3px solid #7722bb;
+  padding:14px 12px;cursor:pointer;appearance:none;-webkit-appearance:none;outline:none;
+}
+.city-select:focus{border-color:#cc44ff;box-shadow:0 0 10px rgba(180,0,255,0.4);}
 .city-select option{background:#1a0030;color:#fff;}
-.select-wrap::after{content:'▼';font-size:5px;color:#cc44ff;position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;}
+.select-wrap::after{content:'▼';font-size:8px;color:#cc44ff;position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;}
 
 /* ── NAV BUTTONS ── */
-.nav-row{display:flex;gap:8px;margin-top:1rem;align-items:center;flex-wrap:wrap;}
-.next-btn{font-family:'Press Start 2P',monospace;font-size:7px;color:#fff;background:linear-gradient(135deg,#6600cc,#aa00ff);border:2px solid #cc44ff;padding:12px 22px;cursor:pointer;letter-spacing:1px;box-shadow:0 0 16px rgba(180,0,255,0.5),4px 4px 0 #330066;text-shadow:0 0 6px rgba(255,255,255,0.5);}
-.next-btn:active{transform:translate(3px,3px);box-shadow:none;}
-.next-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 #333;}
-.back-btn{font-family:'Press Start 2P',monospace;font-size:6px;color:#9966cc;background:transparent;border:1px solid #440066;padding:10px 14px;cursor:pointer;letter-spacing:1px;}
+.nav-row{display:flex;gap:12px;margin-top:1.2rem;align-items:center;flex-wrap:wrap;}
+.next-btn{
+  font-family:'Press Start 2P',monospace;font-size:11px;color:#fff;
+  background:linear-gradient(135deg,#6600cc,#aa00ff);border:3px solid #cc44ff;
+  padding:16px 32px;cursor:pointer;letter-spacing:1px;
+  box-shadow:0 0 20px rgba(180,0,255,0.5),5px 5px 0 #330066;
+  text-shadow:0 0 6px rgba(255,255,255,0.5);
+}
+.next-btn:active{transform:translate(4px,4px);box-shadow:none;}
+.next-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:5px 5px 0 #333;}
+.back-btn{
+  font-family:'Press Start 2P',monospace;font-size:9px;color:#9966cc;
+  background:transparent;border:1px solid #440066;padding:14px 20px;cursor:pointer;letter-spacing:1px;
+}
 .back-btn:hover{border-color:#cc44ff;color:#cc44ff;}
 
 /* ── RESULT ── */
-.result-badge-inline{border:2px solid #cc44ff;padding:.8rem 1rem;margin-bottom:.8rem;box-shadow:0 0 14px rgba(180,0,255,0.4);}
-.result-icon{font-size:24px;display:block;margin-bottom:.3rem;}
-.result-name{font-size:10px;color:#ff88ff;text-shadow:0 0 10px #ff44ff;letter-spacing:2px;display:block;margin-bottom:.3rem;}
-.result-sub{font-size:6px;color:#bb88ff;line-height:2;}
-.cta-msg{font-size:6.5px;line-height:2.3;color:#ddd;margin:1rem 0;}
-.cta-btn{font-family:'Press Start 2P',monospace;font-size:6.5px;color:#fff;background:linear-gradient(135deg,#6600cc,#aa00ff);border:2px solid #cc44ff;padding:11px 16px;cursor:pointer;box-shadow:0 0 14px rgba(180,0,255,0.5),4px 4px 0 #330066;letter-spacing:.5px;display:inline-block;line-height:2;text-decoration:none;text-shadow:0 0 6px rgba(255,255,255,0.5);}
-.cta-btn:active{transform:translate(3px,3px);box-shadow:none;}
+.result-badge-inline{border:3px solid #cc44ff;padding:1.2rem 1.4rem;margin-bottom:1rem;box-shadow:0 0 18px rgba(180,0,255,0.4);}
+.result-icon{font-size:40px;display:block;margin-bottom:.4rem;}
+.result-name{font-size:18px;color:#ff88ff;text-shadow:0 0 14px #ff44ff;letter-spacing:3px;display:block;margin-bottom:.4rem;}
+.result-sub{font-size:10px;color:#bb88ff;line-height:2.2;}
+.cta-msg{font-size:11px;line-height:2.4;color:#ddd;margin:1.2rem 0;}
+.cta-btn{
+  font-family:'Press Start 2P',monospace;font-size:11px;color:#fff;
+  background:linear-gradient(135deg,#6600cc,#aa00ff);border:3px solid #cc44ff;
+  padding:16px 24px;cursor:pointer;
+  box-shadow:0 0 18px rgba(180,0,255,0.5),5px 5px 0 #330066;
+  letter-spacing:.5px;display:inline-block;line-height:2;text-decoration:none;
+  text-shadow:0 0 6px rgba(255,255,255,0.5);
+}
+.cta-btn:active{transform:translate(4px,4px);box-shadow:none;}
 
 /* ── FADE UTILITY ── */
 .fade-in{animation:fadeIn 0.5s ease forwards;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
-
-<!--
-  =====================================================
-  GALAXY BACKGROUND VIDEO (optional)
-  Paste your MP4 URL into CONFIG.videoUrl below.
-  The canvas starfield hides automatically when set.
-  =====================================================
--->
 <video id="bg-video" autoplay muted loop playsinline></video>
-
 <div class="scanlines"></div>
+
 <div id="quiz-wrap">
   <div class="content">
     <div class="arcade-frame">
       <div id="app"></div>
     </div>
-    <p style="font-size:5px;color:#1a0030;text-align:center;margin-top:.6rem;font-family:'Press Start 2P',monospace;">// edit CONFIG at top of script to update video, joey files, cities &amp; links</p>
   </div>
 </div>
 
@@ -202,29 +226,12 @@ body{font-family:'Press Start 2P',monospace;background:#0a0014;color:#fff;min-he
 
 /* =====================================================
    SECTION 1 — CONFIG
-   This is the ONLY section you need to edit regularly.
 ===================================================== */
 var CONFIG = {
-
-  /* ── BACKGROUND VIDEO (optional) ──
-     Paste your galaxy/arcade MP4 URL here.
-     The canvas starfield hides automatically.        */
-  videoUrl: "",
-
-  /* ── JOEY FILES ──
-     Upload both files to your GitHub repo
-     (same folder as index.html), then the
-     URLs below will work automatically.              */
-  joeyGif:  "joey_walk-in.gif",   /* Joey walking onto screen    */
-  joeyIdle: "joey_idle.png",      /* Joey standing, facing user  */
-
-  /* ── INTRO TIMING ──
-     How long Joey's walk-in GIF plays before
-     the speech bubble and buttons appear.
-     5000 = 5 seconds. Adjust to match your GIF.     */
+  videoUrl:   "",
+  joeyGif:    "joey_walk-in.gif",
+  joeyIdle:   "joey_idle.png",
   introDelay: 5000,
-
-  /* ── CITIES ── */
   cities: [
     "Los Angeles, CA",
     "Sacramento, CA",
@@ -232,45 +239,33 @@ var CONFIG = {
     "City Four (coming soon)",
     "City Five (coming soon)"
   ],
-
-  /* ── CTA LINKS ── */
   links: {
     funSeeker:    "https://yoursite.com/events",
     leaguePlayer: "https://yoursite.com/league",
     eventBooker:  "https://yoursite.com/private-events",
     corpPlanner:  "https://yoursite.com/corporate"
   }
-
 };
 
-
 /* =====================================================
-   SECTION 2 — VIDEO ACTIVATION (do not edit)
+   SECTION 2 — VIDEO ACTIVATION
 ===================================================== */
 var bgVideo  = document.getElementById('bg-video');
 var bgCanvas = document.getElementById('bg-canvas');
-if (CONFIG.videoUrl) {
-  bgVideo.src           = CONFIG.videoUrl;
-  bgVideo.style.display = 'block';
-  bgCanvas.style.display = 'none';
-}
-
+if(CONFIG.videoUrl){bgVideo.src=CONFIG.videoUrl;bgVideo.style.display='block';bgCanvas.style.display='none';}
 
 /* =====================================================
-   SECTION 3 — GALACTIC CANVAS BACKGROUND (do not edit)
+   SECTION 3 — GALACTIC CANVAS BACKGROUND
 ===================================================== */
 (function(){
   var c=bgCanvas,ctx=c.getContext('2d'),W,H,stars=[],shapes=[],nebulas=[];
   function rand(a,b){return a+Math.random()*(b-a);}
   function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;init();}
   function init(){
-    stars=[];
-    for(var i=0;i<220;i++) stars.push({x:rand(0,W),y:rand(0,H),r:rand(.5,2.2),tw:rand(0,Math.PI*2),sp:rand(.003,.012),br:rand(.4,1)});
-    shapes=[];
-    var types=['planet','ring-planet','star4','diamond','triangle','circle','squiggle'];
-    for(var j=0;j<26;j++) shapes.push({type:types[Math.floor(Math.random()*types.length)],x:rand(0,W),y:rand(0,H),size:rand(8,30),color:['#cc44ff','#8800ff','#ff44cc','#4488ff','#00ccff','#ff2288'][Math.floor(Math.random()*6)],speed:rand(.1,.4),angle:rand(0,Math.PI*2),rotS:rand(-.012,.012),alpha:rand(.12,.45)});
-    nebulas=[];
-    var nc=[{r:120,g:0,b:200},{r:80,g:0,b:160},{r:160,g:0,b:255},{r:100,g:20,b:180}];
+    stars=[];for(var i=0;i<220;i++)stars.push({x:rand(0,W),y:rand(0,H),r:rand(.5,2.2),tw:rand(0,Math.PI*2),sp:rand(.003,.012),br:rand(.4,1)});
+    shapes=[];var types=['planet','ring-planet','star4','diamond','triangle','circle','squiggle'];
+    for(var j=0;j<26;j++)shapes.push({type:types[Math.floor(Math.random()*types.length)],x:rand(0,W),y:rand(0,H),size:rand(8,30),color:['#cc44ff','#8800ff','#ff44cc','#4488ff','#00ccff','#ff2288'][Math.floor(Math.random()*6)],speed:rand(.1,.4),angle:rand(0,Math.PI*2),rotS:rand(-.012,.012),alpha:rand(.12,.45)});
+    nebulas=[];var nc=[{r:120,g:0,b:200},{r:80,g:0,b:160},{r:160,g:0,b:255},{r:100,g:20,b:180}];
     for(var n=0;n<5;n++){var col=nc[n%nc.length];nebulas.push({x:rand(0,W),y:rand(0,H),rx:rand(120,300),ry:rand(80,200),col:col,al:rand(.04,.10)});}
   }
   function dp(x,y,s,col,al,ring){ctx.save();ctx.globalAlpha=al;var g=ctx.createRadialGradient(x-s*.3,y-s*.3,s*.1,x,y,s);g.addColorStop(0,'rgba(255,255,255,0.3)');g.addColorStop(.5,col);g.addColorStop(1,'rgba(0,0,0,0.5)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,s,0,Math.PI*2);ctx.fill();if(ring){ctx.globalAlpha=al*.6;ctx.strokeStyle=col;ctx.lineWidth=s*.25;ctx.beginPath();ctx.ellipse(x,y,s*1.8,s*.5,-.3,0,Math.PI*2);ctx.stroke();}ctx.restore();}
@@ -286,16 +281,11 @@ if (CONFIG.videoUrl) {
     for(var i=0;i<shapes.length;i++){var sh=shapes[i];sh.y+=sh.speed;sh.angle+=sh.rotS;if(sh.y>H+40)sh.y=-40;ctx.save();ctx.translate(sh.x,sh.y);ctx.rotate(sh.angle);if(sh.type==='planet')dp(0,0,sh.size,sh.color,sh.alpha,false);else if(sh.type==='ring-planet')dp(0,0,sh.size,sh.color,sh.alpha,true);else if(sh.type==='star4')ds4(0,0,sh.size,sh.color,sh.alpha);else if(sh.type==='triangle')dtr(0,0,sh.size,sh.color,sh.alpha);else if(sh.type==='diamond')ddi(0,0,sh.size,sh.color,sh.alpha);else if(sh.type==='squiggle')dsq(0,0,sh.size,sh.color,sh.alpha);else{ctx.globalAlpha=sh.alpha;ctx.strokeStyle=sh.color;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,sh.size,0,Math.PI*2);ctx.stroke();}ctx.restore();}
     requestAnimationFrame(draw);
   }
-  window.addEventListener('resize',resize);
-  resize();
-  draw();
+  window.addEventListener('resize',resize);resize();draw();
 })();
-
 
 /* =====================================================
    SECTION 4 — JOEY'S LINES
-   Edit what Joey says on each screen.
-   No quotation marks will appear on screen.
 ===================================================== */
 var JOEY_LINES = {
   start:           "Yo, I'm Joey! Welcome to the Mission Arcade. Answer a few questions and I'll hook you up with the perfect experience.",
@@ -310,35 +300,32 @@ var JOEY_LINES = {
   result_corp:     "You've got vision. Let's make your team event unforgettable."
 };
 
-
 /* =====================================================
-   SECTION 5 — SEGMENTS & QUESTIONS (do not edit)
+   SECTION 5 — SEGMENTS & QUESTIONS
 ===================================================== */
-var LETTERS = ['A','B','C','D'];
-
-var SEGMENTS = {
+var LETTERS=['A','B','C','D'];
+var SEGMENTS={
   fun:    {name:"FUN SEEKER",        icon:"🕹️", tagline:"Born to play. Here for the energy.",                   joeyLine:"result_fun",    msg:"You don't need a reason to show up — just show up. We've got the games, the drinks, and the crowd. See what's going on this week and come claim your high score.",              cta:"See What's Happening This Week →", link:function(){return CONFIG.links.funSeeker;}},
   league: {name:"LEAGUE PLAYER",     icon:"🎳",  tagline:"You're not here to play around. You're here to WIN.", joeyLine:"result_league", msg:"The league is your arena. Compete weekly, climb the leaderboard, earn your spot in the hall of fame. Spots fill fast — lock yours in.",                                         cta:"Join the Skeeball League →",       link:function(){return CONFIG.links.leaguePlayer;}},
   event:  {name:"EVENT BOOKER",      icon:"🎉",  tagline:"You make the magic happen for everyone else.",         joeyLine:"result_event",  msg:"Birthdays, milestones, celebrations — you want something memorable and personal. Let us help you design a private event your people will talk about all year.",              cta:"Explore Private Event Packages →", link:function(){return CONFIG.links.eventBooker;}},
   corp:   {name:"CORPORATE PLANNER", icon:"💼",  tagline:"You've got a vision and a headcount. Let's execute.", joeyLine:"result_corp",   msg:"Team outings, client entertainment, company milestones — we handle the details so you focus on the impression. Get in touch and we'll build your custom proposal.", cta:"Request a Corporate Proposal →",   link:function(){return CONFIG.links.corpPlanner;}}
 };
-
-var QUESTIONS = [
+var QUESTIONS=[
   {id:"city_check",      type:"yes_no"},
-  {id:"city_select",     type:"city_dropdown", showIf:function(s){return s.answers.city_check==="no";}},
-  {id:"group_role",      type:"choice", options:[
+  {id:"city_select",     type:"city_dropdown",showIf:function(s){return s.answers.city_check==="no";}},
+  {id:"group_role",      type:"choice",options:[
     {label:"The planner",          points:{corp:3,event:2}},
     {label:"The first RSVP",       points:{fun:3,event:1}},
     {label:"The documentarian",    points:{event:2,fun:1}},
     {label:"I bring the vibes 💅", points:{fun:3,league:1}}
   ]},
-  {id:"hundred_dollars", type:"choice", options:[
+  {id:"hundred_dollars", type:"choice",options:[
     {label:"Arcade tokens",                 points:{fun:3,league:2}},
     {label:"Drinks with friends",           points:{fun:3,event:1}},
     {label:"Tickets to an event",           points:{event:3,fun:1}},
     {label:"Rent out something ridiculous", points:{corp:3,event:2}}
   ]},
-  {id:"friday_night",    type:"choice", options:[
+  {id:"friday_night",    type:"choice",options:[
     {label:"Dominating a skeeball match",          points:{league:4}},
     {label:"At a party with friends",              points:{fun:3,event:1}},
     {label:"Hunting the perfect photobooth strips",points:{event:3,fun:1}},
@@ -346,55 +333,37 @@ var QUESTIONS = [
   ]}
 ];
 
-
 /* =====================================================
-   SECTION 6 — QUIZ ENGINE (do not edit)
+   SECTION 6 — QUIZ ENGINE
 ===================================================== */
-var phase='intro';
-var scores={fun:0,league:0,event:0,corp:0};
-var state={answers:{},pendingCity:null};
-var pendingAnswer=null;
-var quizHistory=[];
-var currentQ=0; // index into visible questions list
-var advancing=false;
-var advanceTimer=null;
-var app = document.getElementById('app');
+var phase='intro',scores={fun:0,league:0,event:0,corp:0},state={answers:{},pendingCity:null};
+var pendingAnswer=null,quizHistory=[],currentQ=0,advancing=false,advanceTimer=null;
+var app=document.getElementById('app');
 
-app.addEventListener('click', function(e){
+app.addEventListener('click',function(e){
   var btn=e.target.closest('[data-action]');
-  if(!btn||advancing) return;
+  if(!btn||advancing)return;
   var action=btn.getAttribute('data-action');
-  if(action==='start') startQuiz();
-  else if(action==='yes-no') selectYesNo(btn.getAttribute('data-value'));
-  else if(action==='choice') selectChoice(parseInt(btn.getAttribute('data-idx'),10), btn);
-  else if(action==='next') advanceQuestion();
-  else if(action==='back') goBack();
-  else if(action==='restart') restart();
+  if(action==='start')startQuiz();
+  else if(action==='yes-no')selectYesNo(btn.getAttribute('data-value'));
+  else if(action==='choice')selectChoice(parseInt(btn.getAttribute('data-idx'),10),btn);
+  else if(action==='next')advanceQuestion();
+  else if(action==='back')goBack();
+  else if(action==='restart')restart();
 });
-app.addEventListener('change', function(e){
-  if(e.target.id==='city-dd') cityChosen(e.target.value);
-});
+app.addEventListener('change',function(e){if(e.target.id==='city-dd')cityChosen(e.target.value);});
 
-/* Returns only questions that should be shown given current state */
-function getVisible(){
-  return QUESTIONS.filter(function(q){return !q.showIf||q.showIf(state);});
-}
-/* Returns the current question object from the visible list */
-function getCurrentQ(){
-  return getVisible()[currentQ];
-}
+function getVisible(){return QUESTIONS.filter(function(q){return !q.showIf||q.showIf(state);});}
 function totalScore(){return Object.values(scores).reduce(function(a,b){return a+b;},0)*10;}
 function getWinner(){return Object.entries(scores).sort(function(a,b){return b[1]-a[1];})[0][0];}
 
-/* ── Joey image panel for quiz + result screens ── */
 function joeyPanelHTML(){
   return '<div class="joey-side">'+
-    '<img id="joey-idle-img" src="'+CONFIG.joeyIdle+'" alt="Joey" style="width:100px;height:auto;image-rendering:pixelated;animation:joey-breathe 1.8s ease-in-out infinite;">'+
+    '<img src="'+CONFIG.joeyIdle+'" alt="Joey" style="width:200px;height:auto;image-rendering:pixelated;animation:joey-breathe 1.8s ease-in-out infinite;">'+
     '<p class="joey-name">JOEY</p>'+
   '</div>';
 }
 
-/* ── INTRO SCREEN with walk-in sequence ── */
 function renderIntro(){
   app.innerHTML=
     '<div id="intro-screen">'+
@@ -405,73 +374,56 @@ function renderIntro(){
         '<div id="intro-joey-wrap">'+
           '<img id="intro-gif" src="'+CONFIG.joeyGif+'" alt="Joey walking in">'+
           '<img id="intro-idle" src="'+CONFIG.joeyIdle+'" alt="Joey">'+
-          '<p class="joey-name" style="margin-top:10px;">JOEY</p>'+
+          '<p class="joey-name" style="margin-top:12px;">JOEY</p>'+
         '</div>'+
-        '<div id="intro-bubble">'+
-          '<p>'+JOEY_LINES.start+'</p>'+
-        '</div>'+
+        '<div id="intro-bubble"><p>'+JOEY_LINES.start+'</p></div>'+
       '</div>'+
       '<div id="intro-cta">'+
         '<button type="button" class="start-btn" data-action="start">&#9654; INSERT COIN</button>'+
-        '<p style="font-size:6px;color:#550088;margin-top:1.2rem;" class="blink">Start quiz</p>'+
+        '<p style="font-size:9px;color:#550088;margin-top:1.4rem;" class="blink">Start quiz</p>'+
       '</div>'+
     '</div>';
-
-  /* ── WALK-IN ANIMATION SEQUENCE ── */
   setTimeout(function(){
-    /* Step 1: slide Joey in from the left */
-    var gif = document.getElementById('intro-gif');
-    if(gif) gif.style.transform = 'translateX(0)';
-
-    /* Step 2: after introDelay, swap GIF → idle PNG, show bubble + buttons */
+    var gif=document.getElementById('intro-gif');
+    if(gif)gif.style.transform='translateX(0)';
     setTimeout(function(){
-      var gifEl   = document.getElementById('intro-gif');
-      var idleEl  = document.getElementById('intro-idle');
-      var bubble  = document.getElementById('intro-bubble');
-      var cta     = document.getElementById('intro-cta');
-
-      if(gifEl)  gifEl.style.display  = 'none';
-      if(idleEl) idleEl.style.display = 'block';
-      if(bubble) bubble.classList.add('visible');
-      if(cta)    cta.classList.add('visible');
-
-    }, CONFIG.introDelay);
-
-  }, 100); /* tiny delay so CSS transition fires */
+      var g=document.getElementById('intro-gif'),id=document.getElementById('intro-idle');
+      var b=document.getElementById('intro-bubble'),c=document.getElementById('intro-cta');
+      if(g)g.style.display='none';
+      if(id)id.style.display='block';
+      if(b)b.classList.add('visible');
+      if(c)c.classList.add('visible');
+    },CONFIG.introDelay);
+  },100);
 }
 
-/* ── QUESTION SCREEN ── */
 function renderQuestion(){
-  var visible=getVisible();
-  var q=visible[currentQ];
+  var visible=getVisible(),q=visible[currentQ];
   if(!q){phase='result';render();return;}
   var progress=Math.round(((currentQ+1)/visible.length)*100);
   pendingAnswer=null;
   var joeyLine=JOEY_LINES[q.id]||'What do you think?';
   var bodyHtml='';
-
   if(q.type==='yes_no'){
     bodyHtml=
       '<div class="yes-no-row">'+
         '<button type="button" class="pxbtn" data-action="yes-no" data-value="yes"><span class="ltr">A.</span>Yes</button>'+
         '<button type="button" class="pxbtn" data-action="yes-no" data-value="no"><span class="ltr">B.</span>No</button>'+
       '</div>';
-  } else if(q.type==='city_dropdown'){
+  }else if(q.type==='city_dropdown'){
     var opts=CONFIG.cities.map(function(c){return'<option value="'+c+'">'+c+'</option>';}).join('');
     bodyHtml=
       '<div class="city-wrap">'+
         '<p class="city-label">// SELECT YOUR CITY</p>'+
         '<div class="select-wrap">'+
-          '<select class="city-select" id="city-dd">'+
-            '<option value="">— pick your city —</option>'+opts+
-          '</select>'+
+          '<select class="city-select" id="city-dd"><option value="">— pick your city —</option>'+opts+'</select>'+
         '</div>'+
       '</div>'+
       '<div class="nav-row">'+
         (currentQ>0?'<button type="button" class="back-btn" data-action="back">&#8617; BACK</button>':'')+
         '<button type="button" class="next-btn" id="next-btn" data-action="next" disabled>NEXT &#9654;</button>'+
       '</div>';
-  } else if(q.type==='choice'){
+  }else if(q.type==='choice'){
     bodyHtml=
       '<div class="options-grid" id="opt-grid">'+
         q.options.map(function(opt,i){
@@ -479,10 +431,7 @@ function renderQuestion(){
         }).join('')+
       '</div>';
   }
-
-  var showBack = currentQ > 0;
-  var showBackOnly = showBack && q.type !== 'city_dropdown';
-
+  var showBackOnly=currentQ>0&&q.type!=='city_dropdown';
   app.innerHTML=
     '<div class="hud"><span>STAGE '+(currentQ+1)+'-'+visible.length+'</span><span>SCORE: '+totalScore()+'</span></div>'+
     '<div class="progress-rail"><div class="progress-fill" style="width:'+progress+'%"></div></div>'+
@@ -494,16 +443,13 @@ function renderQuestion(){
           '<p class="bubble-text">'+joeyLine+'</p>'+
         '</div>'+
         bodyHtml+
-        (showBackOnly?'<div class="nav-row">'+
-          '<button type="button" class="back-btn" data-action="back">&#8617; BACK</button>'+
-        '</div>':'')+
+        (showBackOnly?'<div class="nav-row"><button type="button" class="back-btn" data-action="back">&#8617; BACK</button></div>':'')+
       '</div>'+
     '</div>';
 }
 
-/* ── RESULT SCREEN ── */
 function renderResult(){
-  var winner=getWinner(), seg=SEGMENTS[winner];
+  var winner=getWinner(),seg=SEGMENTS[winner];
   var joeyLine=JOEY_LINES[seg.joeyLine]||'Nice.';
   app.innerHTML=
     '<div class="hud" style="justify-content:center;"><span>GAME CLEAR — FINAL SCORE: '+totalScore()+'</span></div>'+
@@ -522,28 +468,23 @@ function renderResult(){
         '</div>'+
         '<p class="cta-msg">'+seg.msg+'</p>'+
         '<a class="cta-btn" href="'+seg.link()+'" target="_blank">'+seg.cta+'</a>'+
-        '<div style="margin-top:1rem;"><button type="button" class="back-btn" data-action="restart">&#8617; PLAY AGAIN</button></div>'+
+        '<div style="margin-top:1.2rem;"><button type="button" class="back-btn" data-action="restart">&#8617; PLAY AGAIN</button></div>'+
       '</div>'+
     '</div>';
 }
 
 function render(){
-  if(phase==='intro') renderIntro();
-  else if(phase==='quiz') renderQuestion();
+  if(phase==='intro')renderIntro();
+  else if(phase==='quiz')renderQuestion();
   else renderResult();
 }
 
 function scheduleAdvance(){
-  if(advanceTimer) clearTimeout(advanceTimer);
-  advanceTimer=setTimeout(function(){
-    advanceTimer=null;
-    advanceQuestion();
-  }, 300);
+  if(advanceTimer)clearTimeout(advanceTimer);
+  advanceTimer=setTimeout(function(){advanceTimer=null;advanceQuestion();},300);
 }
-
-/* ── INTERACTIONS ── */
 function selectYesNo(val){
-  if(phase!=='quiz'||advancing) return;
+  if(phase!=='quiz'||advancing)return;
   state.answers.city_check=val;
   var btns=app.querySelectorAll('.yes-no-row .pxbtn');
   btns.forEach(function(b){b.classList.remove('selected');});
@@ -553,67 +494,53 @@ function selectYesNo(val){
 function cityChosen(val){
   state.pendingCity=val;
   var btn=document.getElementById('next-btn');
-  if(btn) btn.disabled=(val==='');
+  if(btn)btn.disabled=(val==='');
 }
 function selectChoice(i,el){
-  if(phase!=='quiz'||advancing) return;
+  if(phase!=='quiz'||advancing)return;
   var grid=document.getElementById('opt-grid');
-  if(grid) grid.querySelectorAll('.pxbtn').forEach(function(b){b.classList.remove('selected');});
-  el.classList.add('selected');
-  pendingAnswer=i;
+  if(grid)grid.querySelectorAll('.pxbtn').forEach(function(b){b.classList.remove('selected');});
+  el.classList.add('selected');pendingAnswer=i;
   scheduleAdvance();
 }
 function advanceQuestion(){
-  if(phase!=='quiz'||advancing) return;
-  var visible=getVisible();
-  var q=visible[currentQ];
-  if(!q) return;
-
+  if(phase!=='quiz'||advancing)return;
+  var visible=getVisible(),q=visible[currentQ];
+  if(!q)return;
   advancing=true;
   quizHistory.push({currentQ:currentQ,scores:JSON.stringify(scores),state:JSON.stringify(state)});
-
   if(q.type==='city_dropdown'){
-    if(!state.pendingCity){
-      advancing=false;
-      return;
-    }
+    if(!state.pendingCity){advancing=false;return;}
     state.answers.city_select=state.pendingCity;
-  } else if(q.type==='choice'){
-    if(pendingAnswer===null){
-      advancing=false;
-      return;
-    }
+  }else if(q.type==='choice'){
+    if(pendingAnswer===null){advancing=false;return;}
     var pts=q.options[pendingAnswer].points||{};
     Object.entries(pts).forEach(function(e){scores[e[0]]=(scores[e[0]]||0)+e[1];});
   }
-
   pendingAnswer=null;
   currentQ++;
   visible=getVisible();
-  if(currentQ>=visible.length) phase='result';
+  if(currentQ>=visible.length)phase='result';
   render();
   advancing=false;
 }
 function goBack(){
-  if(!quizHistory.length) return;
+  if(!quizHistory.length)return;
   var prev=quizHistory.pop();
-  currentQ=prev.currentQ;
-  scores=JSON.parse(prev.scores);
-  state=JSON.parse(prev.state);
-  pendingAnswer=null;
-  render();
+  currentQ=prev.currentQ;scores=JSON.parse(prev.scores);state=JSON.parse(prev.state);
+  pendingAnswer=null;render();
 }
 function startQuiz(){
-  phase='quiz'; currentQ=0;
+  phase='quiz';currentQ=0;
   scores={fun:0,league:0,event:0,corp:0};
   state={answers:{},pendingCity:null};
-  pendingAnswer=null; quizHistory=[]; render();
+  pendingAnswer=null;quizHistory=[];render();
 }
 function restart(){
-  phase='intro'; currentQ=0;
+  phase='intro';currentQ=0;
   scores={fun:0,league:0,event:0,corp:0};
   state={answers:{},pendingCity:null};
-  pendingAnswer=null; quizHistory=[]; render();
+  pendingAnswer=null;quizHistory=[];render();
 }
 
 render();
