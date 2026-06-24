@@ -355,8 +355,25 @@ var scores={fun:0,league:0,event:0,corp:0};
 var state={answers:{},pendingCity:null};
 var pendingAnswer=null;
 var history=[];
-var currentQ=0; // index into QUESTIONS array (full list)
+var currentQ=0; // index into visible questions list
+var advancing=false;
+var advanceTimer=null;
 var app = document.getElementById('app');
+
+app.addEventListener('click', function(e){
+  var btn=e.target.closest('[data-action]');
+  if(!btn||advancing) return;
+  var action=btn.getAttribute('data-action');
+  if(action==='start') startQuiz();
+  else if(action==='yes-no') selectYesNo(btn.getAttribute('data-value'));
+  else if(action==='choice') selectChoice(parseInt(btn.getAttribute('data-idx'),10), btn);
+  else if(action==='next') advanceQuestion();
+  else if(action==='back') goBack();
+  else if(action==='restart') restart();
+});
+app.addEventListener('change', function(e){
+  if(e.target.id==='city-dd') cityChosen(e.target.value);
+});
 
 /* Returns only questions that should be shown given current state */
 function getVisible(){
@@ -395,7 +412,7 @@ function renderIntro(){
         '</div>'+
       '</div>'+
       '<div id="intro-cta">'+
-        '<button class="start-btn" onclick="startQuiz()">&#9654; INSERT COIN</button>'+
+        '<button type="button" class="start-btn" data-action="start">&#9654; INSERT COIN</button>'+
         '<p style="font-size:6px;color:#550088;margin-top:1.2rem;" class="blink">LETS BEGIN</p>'+
       '</div>'+
     '</div>';
@@ -436,8 +453,8 @@ function renderQuestion(){
   if(q.type==='yes_no'){
     bodyHtml=
       '<div class="yes-no-row">'+
-        '<button class="pxbtn" onclick="selectYesNo(\'yes\')"><span class="ltr">A.</span>Yes</button>'+
-        '<button class="pxbtn" onclick="selectYesNo(\'no\')"><span class="ltr">B.</span>No</button>'+
+        '<button type="button" class="pxbtn" data-action="yes-no" data-value="yes"><span class="ltr">A.</span>Yes</button>'+
+        '<button type="button" class="pxbtn" data-action="yes-no" data-value="no"><span class="ltr">B.</span>No</button>'+
       '</div>';
   } else if(q.type==='city_dropdown'){
     var opts=CONFIG.cities.map(function(c){return'<option value="'+c+'">'+c+'</option>';}).join('');
@@ -445,26 +462,26 @@ function renderQuestion(){
       '<div class="city-wrap">'+
         '<p class="city-label">// SELECT YOUR CITY</p>'+
         '<div class="select-wrap">'+
-          '<select class="city-select" id="city-dd" onchange="cityChosen(this.value)">'+
+          '<select class="city-select" id="city-dd">'+
             '<option value="">— pick your city —</option>'+opts+
           '</select>'+
         '</div>'+
       '</div>'+
       '<div class="nav-row">'+
-        (currentQ>0?'<button class="back-btn" onclick="goBack()">&#8617; BACK</button>':'')+
-        '<button class="next-btn" id="next-btn" onclick="advanceQuestion()" disabled>NEXT &#9654;</button>'+
+        (currentQ>0?'<button type="button" class="back-btn" data-action="back">&#8617; BACK</button>':'')+
+        '<button type="button" class="next-btn" id="next-btn" data-action="next" disabled>NEXT &#9654;</button>'+
       '</div>';
   } else if(q.type==='choice'){
     bodyHtml=
       '<div class="options-grid" id="opt-grid">'+
         q.options.map(function(opt,i){
-          return '<button class="pxbtn" onclick="selectChoice('+i+',this)"><span class="ltr">'+LETTERS[i]+'.</span>'+opt.label+'</button>';
+          return '<button type="button" class="pxbtn" data-action="choice" data-idx="'+i+'"><span class="ltr">'+LETTERS[i]+'.</span>'+opt.label+'</button>';
         }).join('')+
       '</div>';
   }
 
   var showBack = currentQ > 0;
-  var showNext = q.type==='choice'; // city_dropdown has its own nav row built in
+  var showBackOnly = showBack && q.type !== 'city_dropdown';
 
   app.innerHTML=
     '<div class="hud"><span>STAGE '+(currentQ+1)+'-'+visible.length+'</span><span>SCORE: '+totalScore()+'</span></div>'+
@@ -477,10 +494,9 @@ function renderQuestion(){
           '<p class="bubble-text">'+joeyLine+'</p>'+
         '</div>'+
         bodyHtml+
-        '<div class="nav-row">'+
-          (showBack?'<button class="back-btn" onclick="goBack()">&#8617; BACK</button>':'')+
-          (showNext?'<button class="next-btn" id="next-btn" onclick="advanceQuestion()" disabled>NEXT &#9654;</button>':'')+
-        '</div>'+
+        (showBackOnly?'<div class="nav-row">'+
+          '<button type="button" class="back-btn" data-action="back">&#8617; BACK</button>'+
+        '</div>':'')+
       '</div>'+
     '</div>';
 }
@@ -506,7 +522,7 @@ function renderResult(){
         '</div>'+
         '<p class="cta-msg">'+seg.msg+'</p>'+
         '<a class="cta-btn" href="'+seg.link()+'" target="_blank">'+seg.cta+'</a>'+
-        '<div style="margin-top:1rem;"><button class="back-btn" onclick="restart()">&#8617; PLAY AGAIN</button></div>'+
+        '<div style="margin-top:1rem;"><button type="button" class="back-btn" data-action="restart">&#8617; PLAY AGAIN</button></div>'+
       '</div>'+
     '</div>';
 }
@@ -517,20 +533,22 @@ function render(){
   else renderResult();
 }
 
+function scheduleAdvance(){
+  if(advanceTimer) clearTimeout(advanceTimer);
+  advanceTimer=setTimeout(function(){
+    advanceTimer=null;
+    advanceQuestion();
+  }, 300);
+}
+
 /* ── INTERACTIONS ── */
 function selectYesNo(val){
+  if(phase!=='quiz'||advancing) return;
   state.answers.city_check=val;
   var btns=app.querySelectorAll('.yes-no-row .pxbtn');
   btns.forEach(function(b){b.classList.remove('selected');});
   btns[val==='yes'?0:1].classList.add('selected');
-  setTimeout(function(){
-    history.push({currentQ:currentQ,scores:JSON.stringify(scores),state:JSON.stringify(state)});
-    currentQ++;
-    /* skip city_select if user said yes */
-    var visible=getVisible();
-    if(!visible[currentQ]){phase='result';}
-    render();
-  }, 300);
+  scheduleAdvance();
 }
 function cityChosen(val){
   state.pendingCity=val;
@@ -538,28 +556,43 @@ function cityChosen(val){
   if(btn) btn.disabled=(val==='');
 }
 function selectChoice(i,el){
+  if(phase!=='quiz'||advancing) return;
   var grid=document.getElementById('opt-grid');
   if(grid) grid.querySelectorAll('.pxbtn').forEach(function(b){b.classList.remove('selected');});
   el.classList.add('selected');
   pendingAnswer=i;
-  var nb=document.getElementById('next-btn');
-  if(nb) nb.disabled=false;
+  scheduleAdvance();
 }
 function advanceQuestion(){
+  if(phase!=='quiz'||advancing) return;
   var visible=getVisible();
   var q=visible[currentQ];
   if(!q) return;
+
+  advancing=true;
   history.push({currentQ:currentQ,scores:JSON.stringify(scores),state:JSON.stringify(state)});
+
   if(q.type==='city_dropdown'){
+    if(!state.pendingCity){
+      advancing=false;
+      return;
+    }
     state.answers.city_select=state.pendingCity;
-  } else if(q.type==='choice'&&pendingAnswer!==null){
+  } else if(q.type==='choice'){
+    if(pendingAnswer===null){
+      advancing=false;
+      return;
+    }
     var pts=q.options[pendingAnswer].points||{};
     Object.entries(pts).forEach(function(e){scores[e[0]]=(scores[e[0]]||0)+e[1];});
   }
+
   pendingAnswer=null;
   currentQ++;
+  visible=getVisible();
   if(currentQ>=visible.length) phase='result';
   render();
+  advancing=false;
 }
 function goBack(){
   if(!history.length) return;
