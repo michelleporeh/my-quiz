@@ -509,12 +509,16 @@ function render(){
 
 /* ── INTERACTIONS ── */
 function selectYesNo(val){
-  history.push({qIndex:qIndex,scores:JSON.stringify(scores),state:JSON.stringify(state)});
   state.answers.city_check=val;
   var btns=app.querySelectorAll('.yes-no-row .pxbtn');
   btns.forEach(function(b){b.classList.remove('selected');});
   btns[val==='yes'?0:1].classList.add('selected');
-  setTimeout(advanceQuestion,300);
+  setTimeout(function(){
+    history.push({qIndex:qIndex,scores:JSON.stringify(scores),state:JSON.stringify(state)});
+    qIndex++;
+    phase='quiz';
+    render();
+  }, 300);
 }
 function cityChosen(val){
   state.pendingCity=val;
