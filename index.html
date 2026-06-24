@@ -66,7 +66,7 @@ body{font-family:'Press Start 2P',monospace;background:#0a0014;color:#fff;min-he
   flex-direction:column;
   align-items:center;
   justify-content:flex-end;
-  width:200px;
+  width:400px;
 }
 .joey-name{font-size:9px;color:#cc44ff;text-shadow:0 0 6px #cc44ff;margin-top:10px;letter-spacing:2px;text-align:center;}
 
@@ -359,7 +359,7 @@ function getWinner(){return Object.entries(scores).sort(function(a,b){return b[1
 
 function joeyPanelHTML(){
   return '<div class="joey-side">'+
-    '<img src="'+CONFIG.joeyIdle+'" alt="Joey" style="width:200px;height:auto;image-rendering:pixelated;animation:joey-breathe 1.8s ease-in-out infinite;">'+
+    '<img src="'+CONFIG.joeyIdle+'" alt="Joey" style="width:400px;height:auto;image-rendering:pixelated;animation:joey-breathe 1.8s ease-in-out infinite;">'+
     '<p class="joey-name">JOEY</p>'+
   '</div>';
 }
