@@ -354,7 +354,7 @@ var phase='intro';
 var scores={fun:0,league:0,event:0,corp:0};
 var state={answers:{},pendingCity:null};
 var pendingAnswer=null;
-var history=[];
+var quizHistory=[];
 var currentQ=0; // index into visible questions list
 var advancing=false;
 var advanceTimer=null;
@@ -413,7 +413,7 @@ function renderIntro(){
       '</div>'+
       '<div id="intro-cta">'+
         '<button type="button" class="start-btn" data-action="start">&#9654; INSERT COIN</button>'+
-        '<p style="font-size:6px;color:#550088;margin-top:1.2rem;" class="blink">LETS BEGIN</p>'+
+        '<p style="font-size:6px;color:#550088;margin-top:1.2rem;" class="blink">Start quiz</p>'+
       '</div>'+
     '</div>';
 
@@ -570,7 +570,7 @@ function advanceQuestion(){
   if(!q) return;
 
   advancing=true;
-  history.push({currentQ:currentQ,scores:JSON.stringify(scores),state:JSON.stringify(state)});
+  quizHistory.push({currentQ:currentQ,scores:JSON.stringify(scores),state:JSON.stringify(state)});
 
   if(q.type==='city_dropdown'){
     if(!state.pendingCity){
@@ -595,8 +595,8 @@ function advanceQuestion(){
   advancing=false;
 }
 function goBack(){
-  if(!history.length) return;
-  var prev=history.pop();
+  if(!quizHistory.length) return;
+  var prev=quizHistory.pop();
   currentQ=prev.currentQ;
   scores=JSON.parse(prev.scores);
   state=JSON.parse(prev.state);
@@ -607,13 +607,13 @@ function startQuiz(){
   phase='quiz'; currentQ=0;
   scores={fun:0,league:0,event:0,corp:0};
   state={answers:{},pendingCity:null};
-  pendingAnswer=null; history=[]; render();
+  pendingAnswer=null; quizHistory=[]; render();
 }
 function restart(){
   phase='intro'; currentQ=0;
   scores={fun:0,league:0,event:0,corp:0};
   state={answers:{},pendingCity:null};
-  pendingAnswer=null; history=[]; render();
+  pendingAnswer=null; quizHistory=[]; render();
 }
 
 render();
