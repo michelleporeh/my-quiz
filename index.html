@@ -386,7 +386,6 @@ function renderIntro(){
         '</div>'+
       '</div>'+
       '<div id="intro-cta">'+
-        '<div style="margin:.6rem 0;"><span class="lives">&#9829; &#9829; &#9829;</span></div>'+
         '<button class="start-btn" onclick="startQuiz()">&#9654; INSERT COIN</button>'+
         '<p style="font-size:6px;color:#550088;margin-top:1.2rem;" class="blink">PRESS START</p>'+
       '</div>'+
@@ -440,6 +439,10 @@ function renderQuestion(){
             '<option value="">— pick your city —</option>'+opts+
           '</select>'+
         '</div>'+
+      '</div>'+
+      '<div class="nav-row">'+
+        (qIndex>0?'<button class="back-btn" onclick="goBack()">&#8617; BACK</button>':'')+
+        '<button class="next-btn" id="next-btn" onclick="advanceQuestion()" disabled>NEXT &#9654;</button>'+
       '</div>';
   } else if(q.type==='choice'){
     bodyHtml=
@@ -451,7 +454,7 @@ function renderQuestion(){
   }
 
   var showBack = qIndex > 0;
-  var showNext = q.type==='city_dropdown' || q.type==='choice';
+  var showNext = q.type==='choice'; // city_dropdown has its own nav row built in
 
   app.innerHTML=
     '<div class="hud"><span>STAGE '+(qIndex+1)+'-'+visible.length+'</span><span>SCORE: '+totalScore()+'</span></div>'+
