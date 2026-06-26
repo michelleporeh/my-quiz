@@ -3,9 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Joey the Cat's Mission Arcade — Find Your Player Type</title>
+<title>Joey the Cat — Find Your Player Type</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
+/* =====================================================================
+   ████  STYLE GUIDE — HOW TO CHANGE THE LOOK  ████
+   ---------------------------------------------------------------------
+   COLORS (find & replace these hex codes anywhere to re-theme):
+     #cc44ff  = main purple (borders, glow, accents)
+     #ff88ff  = pink (labels, Joey's name, result titles)
+     #aa00ff  = button purple
+     #0a0014  = page background (deep space)
+     #fff     = white text
+   FONT SIZES: search "font-size" in the section you want to resize.
+   JOEY SIZE: search "JOEY_SIZE" — one number controls all his images.
+   SPACING: "padding" and "gap" values control breathing room.
+===================================================================== */
+
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Press Start 2P',monospace;background:#0a0014;color:#fff;min-height:100vh;overflow-x:hidden;}
 
@@ -13,139 +27,57 @@ body{font-family:'Press Start 2P',monospace;background:#0a0014;color:#fff;min-he
 #bg-video{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.28;z-index:0;pointer-events:none;display:none;}
 .scanlines{position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.08) 0px,rgba(0,0,0,0.08) 1px,transparent 1px,transparent 3px);z-index:1;pointer-events:none;}
 
-/* ── FULL SCREEN LAYOUT ── */
-#quiz-wrap{
-  position:relative;
-  min-height:100vh;
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:2rem 2rem;
-  z-index:3;
-}
-.content{
-  width:100%;
-  max-width:100%;        /* full width */
-  position:relative;
-}
-.arcade-frame{
-  border:4px solid #cc44ff;
-  background:rgba(8,0,20,0.90);
-  padding:2.5rem 3rem 3rem;
-  position:relative;
-  box-shadow:0 0 40px rgba(180,0,255,0.4),0 0 80px rgba(100,0,200,0.2),inset 0 0 30px rgba(150,0,255,0.05);
-  min-height:90vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-.arcade-frame::before{
-  content:'';position:absolute;top:7px;left:7px;right:7px;bottom:7px;
-  border:1px solid rgba(200,80,255,0.2);pointer-events:none;
-}
+#quiz-wrap{position:relative;min-height:100vh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;z-index:3;}
+.content{width:100%;max-width:100%;position:relative;}
+.arcade-frame{border:4px solid #cc44ff;background:rgba(8,0,20,0.90);padding:2.5rem 3rem 3rem;position:relative;box-shadow:0 0 40px rgba(180,0,255,0.4),0 0 80px rgba(100,0,200,0.2),inset 0 0 30px rgba(150,0,255,0.05);min-height:90vh;display:flex;flex-direction:column;justify-content:center;}
+.arcade-frame::before{content:'';position:absolute;top:7px;left:7px;right:7px;bottom:7px;border:1px solid rgba(200,80,255,0.2);pointer-events:none;}
 
-/* ── HUD ── */
 .hud{display:flex;justify-content:space-between;font-size:10px;color:#cc44ff;letter-spacing:2px;margin-bottom:1.2rem;text-shadow:0 0 8px #cc44ff;}
-
-/* ── PROGRESS ── */
 .progress-rail{width:100%;height:10px;background:#1a0030;border:1px solid #440066;margin-bottom:2rem;overflow:hidden;}
 .progress-fill{height:100%;background:linear-gradient(90deg,#cc44ff,#ff44cc);transition:width .35s ease;box-shadow:0 0 10px #cc44ff;}
 
-/* ── JOEY LAYOUT ── */
-.joey-layout{
-  display:flex;
-  gap:40px;
-  align-items:flex-end;
-  min-height:380px;
-}
-.joey-side{
-  flex-shrink:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-end;
-  width:400px;
-}
+.joey-layout{display:flex;gap:40px;align-items:flex-end;min-height:380px;}
+.joey-side{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:200px;}
 .joey-name{font-size:9px;color:#cc44ff;text-shadow:0 0 6px #cc44ff;margin-top:10px;letter-spacing:2px;text-align:center;}
 
-/* ── INTRO SCREEN ── */
+/* ── INTRO ── */
 #intro-screen{display:flex;flex-direction:column;align-items:center;text-align:center;}
 .brand-title{display:block;font-size:13px;color:#ff88ff;letter-spacing:4px;margin-bottom:.6rem;text-shadow:0 0 14px #ff44ff,0 0 28px #cc00ff;}
-.big-title{font-size:20px;color:#fff;letter-spacing:3px;line-height:2;display:block;margin-bottom:.4rem;text-shadow:0 0 14px #cc44ff,0 0 40px #8800ff;}
 .px-divider{width:100%;height:3px;background:repeating-linear-gradient(90deg,#cc44ff 0px,#cc44ff 8px,transparent 8px,transparent 16px);margin:1.5rem 0;opacity:.3;}
 
-/* ── INTRO JOEY ROW ── */
-#intro-joey-row{
-  display:flex;
-  gap:40px;
-  align-items:flex-end;
-  justify-content:center;
-  width:100%;
-  margin:1.5rem 0 1.8rem;
-  min-height:240px;
-}
+#intro-joey-row{display:flex;gap:40px;align-items:flex-end;justify-content:center;width:100%;margin:1.5rem 0 1.8rem;min-height:240px;}
 #intro-joey-wrap{display:flex;flex-direction:column;align-items:center;position:relative;}
-#intro-gif{
-  width:400px;height:auto;image-rendering:pixelated;
-  transform:translateX(-600px);
-  transition:transform 0.9s cubic-bezier(.22,1,.36,1);
-}
-#intro-idle{
-  width:400px;height:auto;image-rendering:pixelated;display:none;
-  animation:joey-breathe 1.8s ease-in-out infinite;
-}
+#intro-gif{width:200px;height:auto;image-rendering:pixelated;transform:translateX(-600px);transition:transform 0.9s cubic-bezier(.22,1,.36,1);}
+#intro-idle{width:200px;height:auto;image-rendering:pixelated;display:none;animation:joey-breathe 1.8s ease-in-out infinite;}
 @keyframes joey-breathe{0%,100%{transform:scaleY(1) translateY(0);}50%{transform:scaleY(0.97) translateY(2px);}}
 
-/* ── INTRO BUBBLE ── */
-#intro-bubble{
-  position:relative;background:rgba(40,0,80,0.95);border:3px solid #cc44ff;
-  padding:1.4rem 1.8rem;max-width:480px;text-align:left;
-  box-shadow:0 0 20px rgba(180,0,255,0.3);
-  opacity:0;transform:translateY(10px);
-  transition:opacity 0.5s ease,transform 0.5s ease;
-}
+/* Intro speech lines — each line appears big and punchy */
+#intro-bubble{position:relative;background:rgba(40,0,80,0.95);border:3px solid #cc44ff;padding:1.4rem 1.8rem;max-width:520px;text-align:left;box-shadow:0 0 20px rgba(180,0,255,0.3);opacity:0;transform:translateY(10px);transition:opacity 0.5s ease,transform 0.5s ease;}
 #intro-bubble.visible{opacity:1;transform:translateY(0);}
 #intro-bubble::before{content:'';position:absolute;left:-18px;bottom:30px;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:18px solid #cc44ff;}
 #intro-bubble::after{content:'';position:absolute;left:-13px;bottom:31px;width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:14px solid rgba(40,0,80,0.95);}
-#intro-bubble p{font-size:11px;line-height:2.4;color:#fff;}
+#intro-bubble p{font-size:13px;line-height:2.2;color:#fff;margin-bottom:.8rem;}
+#intro-bubble p:last-child{margin-bottom:0;}
+#intro-bubble .pink{color:#ff88ff;}
 
-/* ── START BUTTON AREA ── */
 #intro-cta{opacity:0;transform:translateY(10px);transition:opacity 0.5s ease 0.3s,transform 0.5s ease 0.3s;}
 #intro-cta.visible{opacity:1;transform:translateY(0);}
-.start-btn{
-  font-family:'Press Start 2P',monospace;font-size:14px;color:#fff;
-  background:linear-gradient(135deg,#7700cc,#bb00ff);border:4px solid #ee88ff;
-  padding:20px 48px;cursor:pointer;letter-spacing:2px;
-  box-shadow:0 0 28px rgba(180,0,255,0.7),7px 7px 0 #330066;
-  margin-top:1.5rem;display:inline-block;
-  text-shadow:0 0 10px rgba(255,255,255,0.8);
-}
+.start-btn{font-family:'Press Start 2P',monospace;font-size:14px;color:#fff;background:linear-gradient(135deg,#7700cc,#bb00ff);border:4px solid #ee88ff;padding:20px 48px;cursor:pointer;letter-spacing:2px;box-shadow:0 0 28px rgba(180,0,255,0.7),7px 7px 0 #330066;margin-top:1.5rem;display:inline-block;text-shadow:0 0 10px rgba(255,255,255,0.8);}
 .start-btn:active{transform:translate(5px,5px);box-shadow:none;}
 .blink{animation:blink 1.1s step-start infinite;}
 @keyframes blink{50%{opacity:0;}}
 
-/* ── QUIZ SPEECH BUBBLE ── */
+/* ── SPEECH BUBBLE (quiz) ── */
 .bubble-side{flex:1;display:flex;flex-direction:column;gap:16px;}
-.speech-bubble{
-  position:relative;background:rgba(40,0,80,0.95);border:3px solid #cc44ff;
-  padding:1.4rem 1.6rem;box-shadow:0 0 18px rgba(180,0,255,0.3);
-}
+.speech-bubble{position:relative;background:rgba(40,0,80,0.95);border:3px solid #cc44ff;padding:1.4rem 1.6rem;box-shadow:0 0 18px rgba(180,0,255,0.3);}
 .speech-bubble::before{content:'';position:absolute;left:-18px;bottom:34px;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:18px solid #cc44ff;}
 .speech-bubble::after{content:'';position:absolute;left:-13px;bottom:35px;width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:14px solid rgba(40,0,80,0.95);}
 .bubble-label{font-size:8px;color:#ff88ff;letter-spacing:2px;margin-bottom:.6rem;text-shadow:0 0 6px #ff44ff;}
-.bubble-text{font-size:13px;line-height:2.2;color:#fff;text-shadow:0 0 4px rgba(255,255,255,0.2);}
+.bubble-text{font-size:14px;line-height:2.1;color:#fff;text-shadow:0 0 4px rgba(255,255,255,0.2);}
 
-/* ── OPTION BUTTONS ── */
+/* ── BUTTONS ── */
 .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;}
-.pxbtn{
-  font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.75;color:#fff;
-  background:rgba(60,0,100,0.6);border:3px solid #7722bb;
-  padding:18px 14px;cursor:pointer;text-align:left;position:relative;width:100%;
-  letter-spacing:.2px;transition:all .12s;text-shadow:0 0 4px rgba(255,255,255,0.2);
-  display:flex;align-items:center;gap:12px;
-}
+.pxbtn{font-family:'Press Start 2P',monospace;font-size:11px;line-height:1.75;color:#fff;background:rgba(60,0,100,0.6);border:3px solid #7722bb;padding:18px 14px;cursor:pointer;text-align:left;position:relative;width:100%;letter-spacing:.2px;transition:all .12s;text-shadow:0 0 4px rgba(255,255,255,0.2);display:flex;align-items:center;gap:12px;}
 .pxbtn::after{content:'';position:absolute;bottom:-5px;right:-5px;width:100%;height:100%;background:#220044;z-index:-1;}
 .pxbtn:hover{background:rgba(180,0,255,0.4);border-color:#cc44ff;box-shadow:0 0 16px rgba(180,0,255,0.5);}
 .pxbtn:hover::after{background:#550099;}
@@ -154,56 +86,39 @@ body{font-family:'Press Start 2P',monospace;background:#0a0014;color:#fff;min-he
 .pxbtn .ltr{color:#ff88ff;font-size:12px;text-shadow:0 0 6px #ff44ff;flex-shrink:0;min-width:20px;}
 .pxbtn:hover .ltr{color:#fff;}
 .pxbtn.selected{background:rgba(180,0,255,0.5);border-color:#cc44ff;box-shadow:0 0 16px rgba(180,0,255,0.6);}
-.yes-no-row{display:flex;gap:14px;margin-top:6px;}
-.yes-no-row .pxbtn{flex:1;justify-content:center;text-align:center;}
 
 /* ── CITY DROPDOWN ── */
-.city-wrap{margin-top:10px;}
+.city-wrap{margin-top:12px;}
 .city-label{font-size:8px;color:#bb88ff;letter-spacing:1px;margin-bottom:.5rem;}
 .select-wrap{position:relative;}
-.city-select{
-  font-family:'Press Start 2P',monospace;font-size:11px;width:100%;
-  background:#1a0030;color:#fff;border:3px solid #7722bb;
-  padding:14px 12px;cursor:pointer;appearance:none;-webkit-appearance:none;outline:none;
-}
+.city-select{font-family:'Press Start 2P',monospace;font-size:11px;width:100%;background:#1a0030;color:#fff;border:3px solid #7722bb;padding:14px 12px;cursor:pointer;appearance:none;-webkit-appearance:none;outline:none;}
 .city-select:focus{border-color:#cc44ff;box-shadow:0 0 10px rgba(180,0,255,0.4);}
 .city-select option{background:#1a0030;color:#fff;}
 .select-wrap::after{content:'▼';font-size:8px;color:#cc44ff;position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;}
 
-/* ── NAV BUTTONS ── */
+/* ── TEXT INPUTS (slap bracelet form) ── */
+.field{margin-top:12px;}
+.field label{display:block;font-size:8px;color:#bb88ff;letter-spacing:1px;margin-bottom:.4rem;}
+.field input{font-family:'Press Start 2P',monospace;font-size:10px;width:100%;background:#1a0030;color:#fff;border:3px solid #7722bb;padding:14px 12px;outline:none;}
+.field input:focus{border-color:#cc44ff;box-shadow:0 0 10px rgba(180,0,255,0.4);}
+
+/* ── NAV ── */
 .nav-row{display:flex;gap:12px;margin-top:1.2rem;align-items:center;flex-wrap:wrap;}
-.next-btn{
-  font-family:'Press Start 2P',monospace;font-size:11px;color:#fff;
-  background:linear-gradient(135deg,#6600cc,#aa00ff);border:3px solid #cc44ff;
-  padding:16px 32px;cursor:pointer;letter-spacing:1px;
-  box-shadow:0 0 20px rgba(180,0,255,0.5),5px 5px 0 #330066;
-  text-shadow:0 0 6px rgba(255,255,255,0.5);
-}
+.next-btn{font-family:'Press Start 2P',monospace;font-size:11px;color:#fff;background:linear-gradient(135deg,#6600cc,#aa00ff);border:3px solid #cc44ff;padding:16px 32px;cursor:pointer;letter-spacing:1px;box-shadow:0 0 20px rgba(180,0,255,0.5),5px 5px 0 #330066;text-shadow:0 0 6px rgba(255,255,255,0.5);}
 .next-btn:active{transform:translate(4px,4px);box-shadow:none;}
 .next-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:5px 5px 0 #333;}
-.back-btn{
-  font-family:'Press Start 2P',monospace;font-size:9px;color:#9966cc;
-  background:transparent;border:1px solid #440066;padding:14px 20px;cursor:pointer;letter-spacing:1px;
-}
+.back-btn{font-family:'Press Start 2P',monospace;font-size:9px;color:#9966cc;background:transparent;border:1px solid #440066;padding:14px 20px;cursor:pointer;letter-spacing:1px;}
 .back-btn:hover{border-color:#cc44ff;color:#cc44ff;}
 
-/* ── RESULT ── */
-.result-badge-inline{border:3px solid #cc44ff;padding:1.2rem 1.4rem;margin-bottom:1rem;box-shadow:0 0 18px rgba(180,0,255,0.4);}
-.result-icon{font-size:40px;display:block;margin-bottom:.4rem;}
-.result-name{font-size:18px;color:#ff88ff;text-shadow:0 0 14px #ff44ff;letter-spacing:3px;display:block;margin-bottom:.4rem;}
-.result-sub{font-size:10px;color:#bb88ff;line-height:2.2;}
-.cta-msg{font-size:11px;line-height:2.4;color:#ddd;margin:1.2rem 0;}
-.cta-btn{
-  font-family:'Press Start 2P',monospace;font-size:11px;color:#fff;
-  background:linear-gradient(135deg,#6600cc,#aa00ff);border:3px solid #cc44ff;
-  padding:16px 24px;cursor:pointer;
-  box-shadow:0 0 18px rgba(180,0,255,0.5),5px 5px 0 #330066;
-  letter-spacing:.5px;display:inline-block;line-height:2;text-decoration:none;
-  text-shadow:0 0 6px rgba(255,255,255,0.5);
-}
+/* ── RESULT / OUTRO ── */
+.result-msg{font-size:14px;line-height:2.2;color:#fff;}
+.result-msg .pink{color:#ff88ff;text-shadow:0 0 8px #ff44ff;}
+.event-block{border:3px solid #cc44ff;padding:1.2rem 1.4rem;margin-top:1.2rem;box-shadow:0 0 18px rgba(180,0,255,0.4);}
+.event-label{font-size:8px;color:#ff88ff;letter-spacing:2px;margin-bottom:.6rem;}
+.event-name{font-size:13px;color:#fff;line-height:1.8;margin-bottom:1rem;}
+.cta-btn{font-family:'Press Start 2P',monospace;font-size:11px;color:#fff;background:linear-gradient(135deg,#6600cc,#aa00ff);border:3px solid #cc44ff;padding:16px 24px;cursor:pointer;box-shadow:0 0 18px rgba(180,0,255,0.5),5px 5px 0 #330066;letter-spacing:.5px;display:inline-block;line-height:1.8;text-decoration:none;text-shadow:0 0 6px rgba(255,255,255,0.5);}
 .cta-btn:active{transform:translate(4px,4px);box-shadow:none;}
 
-/* ── FADE UTILITY ── */
 .fade-in{animation:fadeIn 0.5s ease forwards;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 </style>
@@ -223,40 +138,55 @@ body{font-family:'Press Start 2P',monospace;background:#0a0014;color:#fff;min-he
 </div>
 
 <script>
-
-/* =====================================================
-   SECTION 1 — CONFIG
-===================================================== */
+/* ╔═══════════════════════════════════════════════════════════════════╗
+   ║  SECTION 1 — CONFIG                                                ║
+   ║  The control panel. Edit cities, links, Joey's files, the next    ║
+   ║  event, and (later) your Mailchimp connection here.               ║
+   ╚═══════════════════════════════════════════════════════════════════╝ */
 var CONFIG = {
-  videoUrl:   "",
-  joeyGif:    "joey_walk-in.gif",
-  joeyIdle:   "joey_idle.png",
+
+  /* Background video — paste an MP4 URL to replace the starfield. */
+  videoUrl: "",
+
+  /* Joey's animation files. Upload both to your GitHub repo. */
+  joeyGif:  "joey_walk-in.gif",   /* walks in on the intro    */
+  joeyIdle: "joey_idle.png",      /* stands during questions  */
+
+  /* How long the walk-in GIF plays before the bubble appears (ms). */
   introDelay: 5000,
-  cities: [
-    "Los Angeles, CA",
-    "Sacramento, CA",
-    "Denver, CO",
-    "City Four (coming soon)",
-    "City Five (coming soon)"
-  ],
+
+  /* Cities shown if the user picks "somewhere else" on Q1. */
+  cities: ["Los Angeles, CA","Sacramento, CA","Denver, CO","Other"],
+
+  /* The next event teaser shown at the very end. Swap freely. */
+  nextEvent: {
+    headline: "Skee-Ball League — kicking off August 2026.",
+    buttonText: "Join the league →",
+    buttonLink: "https://yoursite.com/league"
+  },
+
+  /* CTA links per result vibe. */
   links: {
-    funSeeker:    "https://yoursite.com/events",
-    leaguePlayer: "https://yoursite.com/league",
-    eventBooker:  "https://yoursite.com/private-events",
-    corpPlanner:  "https://yoursite.com/corporate"
+    league: "https://yoursite.com/league",
+    event:  "https://yoursite.com/private-events",
+    fun:    "https://yoursite.com/events",
+    corp:   "https://yoursite.com/corporate"
   }
 };
 
-/* =====================================================
-   SECTION 2 — VIDEO ACTIVATION
-===================================================== */
-var bgVideo  = document.getElementById('bg-video');
-var bgCanvas = document.getElementById('bg-canvas');
+
+/* ╔═══════════════════════════════════════════════════════════════════╗
+   ║  SECTION 2 — VIDEO ACTIVATION  (no edits needed)                  ║
+   ╚═══════════════════════════════════════════════════════════════════╝ */
+var bgVideo=document.getElementById('bg-video');
+var bgCanvas=document.getElementById('bg-canvas');
 if(CONFIG.videoUrl){bgVideo.src=CONFIG.videoUrl;bgVideo.style.display='block';bgCanvas.style.display='none';}
 
-/* =====================================================
-   SECTION 3 — GALACTIC CANVAS BACKGROUND
-===================================================== */
+
+/* ╔═══════════════════════════════════════════════════════════════════╗
+   ║  SECTION 3 — GALACTIC BACKGROUND  (no edits needed)               ║
+   ║  Draws the animated deep-space starfield + floating shapes.       ║
+   ╚═══════════════════════════════════════════════════════════════════╝ */
 (function(){
   var c=bgCanvas,ctx=c.getContext('2d'),W,H,stars=[],shapes=[],nebulas=[];
   function rand(a,b){return a+Math.random()*(b-a);}
@@ -284,91 +214,176 @@ if(CONFIG.videoUrl){bgVideo.src=CONFIG.videoUrl;bgVideo.style.display='block';bg
   window.addEventListener('resize',resize);resize();draw();
 })();
 
-/* =====================================================
-   SECTION 4 — JOEY'S LINES
-===================================================== */
-var JOEY_LINES = {
-  start:           "Yo, I'm Joey! Welcome to the Mission Arcade. Answer a few questions and I'll hook you up with the perfect experience.",
-  city_check:      "First, do you live in the city?",
-  city_select:     "Nice! Which city are you in? We might be closer than you think.",
-  group_role:      "What's your role in the group chat?",
-  hundred_dollars: "Someone slides you $100. What's the move?",
-  friday_night:    "It's Friday night. Where can I find you?",
-  result_fun:      "I knew it... You're my kind of person — come through anytime.",
-  result_league:   "Oh, you're competitive. I respect it. The league is calling your name.",
-  result_event:    "You're the one who makes it memorable for everyone else. Let's build something!",
-  result_corp:     "You've got vision. Let's make your team event unforgettable."
+
+/* ╔═══════════════════════════════════════════════════════════════════╗
+   ║  SECTION 4 — JOEY'S SCRIPT                                         ║
+   ║  Every word Joey says. Edit text between the quotes. The intro is  ║
+   ║  an ARRAY — each item is its own punchy line on the screen.        ║
+   ║  >> Replace [BAR 1/2/3] with real photobooth bar names. <<        ║
+   ╚═══════════════════════════════════════════════════════════════════╝ */
+var INTRO_LINES = [
+  "Hey — you look familiar.",
+  "You used one of my photobooths. I've got them in bars all over SF — <span class='pink'>[BAR 1], [BAR 2], [BAR 3]</span> and counting.",
+  "I'm Joey. 3x national Skee-Ball champ. I put arcade games in bars, throw private events, and I just opened my own arcade in the Mission."
+];
+
+var JOEY_ASKS = {
+  q_city:    "I've been in San Francisco since 2008. You?",
+  q_skee:    "Have you ever played Skee-Ball?",
+  q_role:    "Your friend group is going out. What's your role?",
+  q_friday:  "Friday night. Where are you?",
+  q_money:   "Someone hands you $100. Do what you want."
 };
 
-/* =====================================================
-   SECTION 5 — SEGMENTS & QUESTIONS
-===================================================== */
-var LETTERS=['A','B','C','D'];
-var SEGMENTS={
-  fun:    {name:"FUN SEEKER",        icon:"🕹️", tagline:"Born to play. Here for the energy.",                   joeyLine:"result_fun",    msg:"You don't need a reason to show up — just show up. We've got the games, the drinks, and the crowd. See what's going on this week and come claim your high score.",              cta:"See What's Happening This Week →", link:function(){return CONFIG.links.funSeeker;}},
-  league: {name:"LEAGUE PLAYER",     icon:"🎳",  tagline:"You're not here to play around. You're here to WIN.", joeyLine:"result_league", msg:"The league is your arena. Compete weekly, climb the leaderboard, earn your spot in the hall of fame. Spots fill fast — lock yours in.",                                         cta:"Join the Skeeball League →",       link:function(){return CONFIG.links.leaguePlayer;}},
-  event:  {name:"EVENT BOOKER",      icon:"🎉",  tagline:"You make the magic happen for everyone else.",         joeyLine:"result_event",  msg:"Birthdays, milestones, celebrations — you want something memorable and personal. Let us help you design a private event your people will talk about all year.",              cta:"Explore Private Event Packages →", link:function(){return CONFIG.links.eventBooker;}},
-  corp:   {name:"CORPORATE PLANNER", icon:"💼",  tagline:"You've got a vision and a headcount. Let's execute.", joeyLine:"result_corp",   msg:"Team outings, client entertainment, company milestones — we handle the details so you focus on the impression. Get in touch and we'll build your custom proposal.", cta:"Request a Corporate Proposal →",   link:function(){return CONFIG.links.corpPlanner;}}
+/* Joey's closing line per vibe (NO segment labels shown to the user). */
+var JOEY_RESULTS = {
+  league: "I knew it. Come find me at the arcade — I run the city's first Skee-Ball league, and I think you'd fit right in.",
+  event:  "You're the one who makes it happen. I've got a whole private arcade in the Mission. Let's make something your people won't stop talking about.",
+  fun:    "You're easy — in the best way. Come hang. Games, bar, good people. That's the whole thing.",
+  corp:   "Team thing? I've done hundreds of them. Nothing breaks the ice like a Skee-Ball tournament. Let's talk."
 };
-var QUESTIONS=[
-  {id:"city_check",      type:"yes_no"},
-  {id:"city_select",     type:"city_dropdown",showIf:function(s){return s.answers.city_check==="no";}},
-  {id:"group_role",      type:"choice",options:[
-    {label:"The planner",          points:{corp:3,event:2}},
-    {label:"The first RSVP",       points:{fun:3,event:1}},
-    {label:"The documentarian",    points:{event:2,fun:1}},
-    {label:"I bring the vibes 💅", points:{fun:3,league:1}}
+
+
+/* ╔═══════════════════════════════════════════════════════════════════╗
+   ║  SECTION 5 — QUESTIONS, SCORING & TAGS                            ║
+   ║                                                                   ║
+   ║  Each answer does TWO things:                                     ║
+   ║   1) vibe: adds points toward a result (league/event/fun/corp)   ║
+   ║   2) tags: adds Mailchimp tags for segmentation                  ║
+   ║                                                                   ║
+   ║  To edit an answer: change its `label` (what they see),          ║
+   ║  its `vibe` (points), and its `tags` (segmentation labels).      ║
+   ╚═══════════════════════════════════════════════════════════════════╝ */
+var LETTERS=['A','B','C','D'];
+
+var QUESTIONS = [
+
+  /* Q1 — CITY. Special type: A/B/C advance instantly; D opens a dropdown. */
+  { id:"q_city", type:"city", options:[
+    { label:"SF local.",              tags:["lives-sf"],   vibe:{} },
+    { label:"Bay Area — close enough.",tags:["bay-area"],  vibe:{} },
+    { label:"Just visiting.",          tags:["visitor"],   vibe:{} },
+    { label:"Somewhere else.",         tags:["out-of-area"],vibe:{}, opensDropdown:true }
   ]},
-  {id:"hundred_dollars", type:"choice",options:[
-    {label:"Arcade tokens",                 points:{fun:3,league:2}},
-    {label:"Drinks with friends",           points:{fun:3,event:1}},
-    {label:"Tickets to an event",           points:{event:3,fun:1}},
-    {label:"Rent out something ridiculous", points:{corp:3,event:2}}
+
+  /* Q2 — SKEE-BALL */
+  { id:"q_skee", type:"choice", options:[
+    { label:"Yeah — I'm actually pretty good.", tags:["skeeball-competitor"], vibe:{league:4} },
+    { label:"Once or twice. Fun game.",          tags:["skeeball-casual"],     vibe:{fun:2,league:1} },
+    { label:"Never. But I'm curious.",           tags:["skeeball-curious"],    vibe:{fun:2} },
+    { label:"Not really my thing.",              tags:["arcade-general"],      vibe:{fun:1} }
   ]},
-  {id:"friday_night",    type:"choice",options:[
-    {label:"Dominating a skeeball match",          points:{league:4}},
-    {label:"At a party with friends",              points:{fun:3,event:1}},
-    {label:"Hunting the perfect photobooth strips",points:{event:3,fun:1}},
-    {label:"On my couch and loving it",            points:{fun:2}}
+
+  /* Q3 — GROUP ROLE */
+  { id:"q_role", type:"choice", options:[
+    { label:"I picked the place.",          tags:["planner","interested-in-events"], vibe:{corp:3,event:2} },
+    { label:"I just showed up.",            tags:["fun-seeker"],                     vibe:{fun:3} },
+    { label:"I'm taking photos of everything.",tags:["photobooth-fan"],             vibe:{event:2,fun:1} },
+    { label:"I talked everyone into coming.", tags:["social-connector"],            vibe:{fun:2,event:1} }
+  ]},
+
+  /* Q4 — FRIDAY NIGHT */
+  { id:"q_friday", type:"choice", options:[
+    { label:"At a bar in the city.",     tags:["local-social"],            vibe:{fun:2} },
+    { label:"At a party I didn't plan.", tags:["fun-seeker"],              vibe:{fun:3} },
+    { label:"Hosting something.",        tags:["private-events","buyer"],  vibe:{event:3,corp:1} },
+    { label:"Home. No shame.",           tags:["low-commitment"],          vibe:{fun:1} }
+  ]},
+
+  /* Q5 — $100 */
+  { id:"q_money", type:"choice", options:[
+    { label:"Rounds for everyone.",                  tags:["social"],                 vibe:{fun:3} },
+    { label:"Tickets to something.",                 tags:["event-attendee"],         vibe:{event:3,fun:1} },
+    { label:"Put it toward renting something out.",  tags:["private-events","buyer"], vibe:{corp:3,event:2} },
+    { label:"Arcade tokens. Obviously.",             tags:["arcade-fan","league"],    vibe:{league:3,fun:1} }
   ]}
 ];
 
-/* =====================================================
-   SECTION 6 — QUIZ ENGINE
-===================================================== */
-var phase='intro',scores={fun:0,league:0,event:0,corp:0},state={answers:{},pendingCity:null};
-var pendingAnswer=null,quizHistory=[],currentQ=0,advancing=false,advanceTimer=null;
+
+/* ╔═══════════════════════════════════════════════════════════════════╗
+   ║  SECTION 6 — TAG COLLECTION & MAILCHIMP HOOK                      ║
+   ║                                                                   ║
+   ║  Tags collect here as the user answers. "Silent submission"       ║
+   ║  fires on every NEXT — so even a partial quiz captures data.      ║
+   ║                                                                   ║
+   ║  >> TO CONNECT MAILCHIMP: put your integration inside             ║
+   ║     submitToMailchimp(). Right now it logs to the browser         ║
+   ║     console so you can see exactly what would be sent. <<         ║
+   ╚═══════════════════════════════════════════════════════════════════╝ */
+var userTags = [];   /* all tags collected so far  */
+var userData = {};   /* name, email, address, city */
+
+function addTags(tags){
+  if(!tags) return;
+  tags.forEach(function(t){ if(userTags.indexOf(t)===-1) userTags.push(t); });
+}
+
+/* Called on every advance (silent submission) and at the end. */
+function submitToMailchimp(isFinal){
+  /* ---- WHAT WOULD BE SENT ---- */
+  var payload = { tags:userTags, data:userData, complete:!!isFinal };
+  console.log("[Mailchimp submission]", payload);
+
+  /* ---- WIRE UP MAILCHIMP HERE ----
+     Example (using a serverless function or Zapier webhook):
+
+     fetch("https://your-endpoint.com/mailchimp", {
+       method:"POST",
+       headers:{"Content-Type":"application/json"},
+       body:JSON.stringify(payload)
+     });
+
+     Mailchimp's API needs a backend (you can't call it safely from
+     the browser). Easiest path: a Zapier "Catch Hook" → Mailchimp
+     "Add/Update Subscriber" zap. Paste that webhook URL above.
+  -------------------------------------------------------------- */
+}
+
+
+/* ╔═══════════════════════════════════════════════════════════════════╗
+   ║  SECTION 7 — QUIZ ENGINE  (the machinery — edit with care)        ║
+   ╚═══════════════════════════════════════════════════════════════════╝ */
+var phase='intro';                 /* intro | quiz | result            */
+var currentQ=0;                    /* which visible question we're on  */
+var scores={fun:0,league:0,event:0,corp:0};
+var pendingAnswer=null;            /* index of selected option         */
+var pendingCity=null;              /* dropdown city, if chosen         */
+var advancing=false;               /* lock to prevent double-clicks    */
+var advanceTimer=null;
+var quizHistory=[];                /* for the BACK button              */
 var app=document.getElementById('app');
 
+/* JOEY_SIZE — change this one number to resize Joey everywhere. */
+var JOEY_SIZE = 200;
+
+/* Click handling is delegated (one listener for all buttons). */
 app.addEventListener('click',function(e){
   var btn=e.target.closest('[data-action]');
   if(!btn||advancing)return;
-  var action=btn.getAttribute('data-action');
-  if(action==='start')startQuiz();
-  else if(action==='yes-no')selectYesNo(btn.getAttribute('data-value'));
-  else if(action==='choice')selectChoice(parseInt(btn.getAttribute('data-idx'),10),btn);
-  else if(action==='next')advanceQuestion();
-  else if(action==='back')goBack();
-  else if(action==='restart')restart();
+  var a=btn.getAttribute('data-action');
+  if(a==='start')           startQuiz();
+  else if(a==='choice')     selectChoice(parseInt(btn.getAttribute('data-idx'),10),btn);
+  else if(a==='city')       selectCity(parseInt(btn.getAttribute('data-idx'),10),btn);
+  else if(a==='next')       advanceQuestion();
+  else if(a==='back')       goBack();
+  else if(a==='restart')    restart();
+  else if(a==='slap')       chooseSlap(btn.getAttribute('data-value'));
 });
-app.addEventListener('change',function(e){if(e.target.id==='city-dd')cityChosen(e.target.value);});
+app.addEventListener('change',function(e){
+  if(e.target.id==='city-dd'){pendingCity=e.target.value;var nb=document.getElementById('next-btn');if(nb)nb.disabled=(pendingCity==='');}
+});
 
-function getVisible(){return QUESTIONS.filter(function(q){return !q.showIf||q.showIf(state);});}
 function totalScore(){return Object.values(scores).reduce(function(a,b){return a+b;},0)*10;}
 function getWinner(){return Object.entries(scores).sort(function(a,b){return b[1]-a[1];})[0][0];}
+function joeyImg(){return '<img src="'+CONFIG.joeyIdle+'" alt="Joey" style="width:'+JOEY_SIZE+'px;height:auto;image-rendering:pixelated;animation:joey-breathe 1.8s ease-in-out infinite;">';}
+function joeyPanel(){return '<div class="joey-side">'+joeyImg()+'<p class="joey-name">JOEY</p></div>';}
 
-function joeyPanelHTML(){
-  return '<div class="joey-side">'+
-    '<img src="'+CONFIG.joeyIdle+'" alt="Joey" style="width:400px;height:auto;image-rendering:pixelated;animation:joey-breathe 1.8s ease-in-out infinite;">'+
-    '<p class="joey-name">JOEY</p>'+
-  '</div>';
-}
-
+/* ── INTRO ── */
 function renderIntro(){
+  var lines=INTRO_LINES.map(function(l){return '<p>'+l+'</p>';}).join('');
   app.innerHTML=
     '<div id="intro-screen">'+
-      '<span class="brand-title">JOEY THE CAT\'S</span>'+
-      '<span class="big-title">MISSION ARCADE</span>'+
+      '<span class="brand-title">JOEY THE CAT</span>'+
       '<div class="px-divider"></div>'+
       '<div id="intro-joey-row">'+
         '<div id="intro-joey-wrap">'+
@@ -376,13 +391,14 @@ function renderIntro(){
           '<img id="intro-idle" src="'+CONFIG.joeyIdle+'" alt="Joey">'+
           '<p class="joey-name" style="margin-top:12px;">JOEY</p>'+
         '</div>'+
-        '<div id="intro-bubble"><p>'+JOEY_LINES.start+'</p></div>'+
+        '<div id="intro-bubble">'+lines+'</div>'+
       '</div>'+
       '<div id="intro-cta">'+
-        '<button type="button" class="start-btn" data-action="start">&#9654; INSERT COIN</button>'+
-        '<p style="font-size:9px;color:#550088;margin-top:1.4rem;" class="blink">Start quiz</p>'+
-      '</div>'+
-    '</div>';
+        '<button type="button" class="start-btn" data-action="start">&#9654; LET\'S GO</button>'+
+        '<p style="font-size:9px;color:#550088;margin-top:1.4rem;" class="blink">Start</p>'+
+      '</div>';
+  document.querySelector('#intro-idle').style.width=JOEY_SIZE+'px';
+  document.querySelector('#intro-gif').style.width=JOEY_SIZE+'px';
   setTimeout(function(){
     var gif=document.getElementById('intro-gif');
     if(gif)gif.style.transform='translateX(0)';
@@ -397,80 +413,111 @@ function renderIntro(){
   },100);
 }
 
+/* ── QUESTION ── */
 function renderQuestion(){
-  var visible=getVisible(),q=visible[currentQ];
+  var q=QUESTIONS[currentQ];
   if(!q){phase='result';render();return;}
-  var progress=Math.round(((currentQ+1)/visible.length)*100);
-  pendingAnswer=null;
-  var joeyLine=JOEY_LINES[q.id]||'What do you think?';
-  var bodyHtml='';
-  if(q.type==='yes_no'){
-    bodyHtml=
-      '<div class="yes-no-row">'+
-        '<button type="button" class="pxbtn" data-action="yes-no" data-value="yes"><span class="ltr">A.</span>Yes</button>'+
-        '<button type="button" class="pxbtn" data-action="yes-no" data-value="no"><span class="ltr">B.</span>No</button>'+
-      '</div>';
-  }else if(q.type==='city_dropdown'){
-    var opts=CONFIG.cities.map(function(c){return'<option value="'+c+'">'+c+'</option>';}).join('');
-    bodyHtml=
-      '<div class="city-wrap">'+
-        '<p class="city-label">// SELECT YOUR CITY</p>'+
-        '<div class="select-wrap">'+
-          '<select class="city-select" id="city-dd"><option value="">— pick your city —</option>'+opts+'</select>'+
-        '</div>'+
+  var progress=Math.round(((currentQ+1)/QUESTIONS.length)*100);
+  pendingAnswer=null;pendingCity=null;
+  var joeyLine=JOEY_ASKS[q.id]||'';
+  var body='';
+
+  if(q.type==='city'){
+    body='<div class="options-grid" id="opt-grid">'+
+      q.options.map(function(o,i){return '<button type="button" class="pxbtn" data-action="city" data-idx="'+i+'"><span class="ltr">'+LETTERS[i]+'.</span>'+o.label+'</button>';}).join('')+
+    '</div>'+
+    '<div id="city-dropdown" style="display:none;">'+
+      '<div class="city-wrap"><p class="city-label">// WHICH ONE?</p>'+
+        '<div class="select-wrap"><select class="city-select" id="city-dd"><option value="">— pick your city —</option>'+
+          CONFIG.cities.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('')+
+        '</select></div>'+
       '</div>'+
-      '<div class="nav-row">'+
-        (currentQ>0?'<button type="button" class="back-btn" data-action="back">&#8617; BACK</button>':'')+
-        '<button type="button" class="next-btn" id="next-btn" data-action="next" disabled>NEXT &#9654;</button>'+
-      '</div>';
-  }else if(q.type==='choice'){
-    bodyHtml=
-      '<div class="options-grid" id="opt-grid">'+
-        q.options.map(function(opt,i){
-          return '<button type="button" class="pxbtn" data-action="choice" data-idx="'+i+'"><span class="ltr">'+LETTERS[i]+'.</span>'+opt.label+'</button>';
-        }).join('')+
-      '</div>';
+      '<div class="nav-row"><button type="button" class="next-btn" id="next-btn" data-action="next" disabled>NEXT &#9654;</button></div>'+
+    '</div>';
+  } else {
+    body='<div class="options-grid" id="opt-grid">'+
+      q.options.map(function(o,i){return '<button type="button" class="pxbtn" data-action="choice" data-idx="'+i+'"><span class="ltr">'+LETTERS[i]+'.</span>'+o.label+'</button>';}).join('')+
+    '</div>';
   }
-  var showBackOnly=currentQ>0&&q.type!=='city_dropdown';
+
+  var backBtn = currentQ>0 ? '<div class="nav-row"><button type="button" class="back-btn" data-action="back">&#8617; BACK</button></div>' : '';
+
   app.innerHTML=
-    '<div class="hud"><span>STAGE '+(currentQ+1)+'-'+visible.length+'</span><span>SCORE: '+totalScore()+'</span></div>'+
+    '<div class="hud"><span>STAGE '+(currentQ+1)+'-'+QUESTIONS.length+'</span><span>SCORE: '+totalScore()+'</span></div>'+
     '<div class="progress-rail"><div class="progress-fill" style="width:'+progress+'%"></div></div>'+
     '<div class="joey-layout">'+
-      joeyPanelHTML()+
+      joeyPanel()+
       '<div class="bubble-side fade-in">'+
-        '<div class="speech-bubble">'+
-          '<p class="bubble-label">// JOEY ASKS</p>'+
-          '<p class="bubble-text">'+joeyLine+'</p>'+
-        '</div>'+
-        bodyHtml+
-        (showBackOnly?'<div class="nav-row"><button type="button" class="back-btn" data-action="back">&#8617; BACK</button></div>':'')+
+        '<div class="speech-bubble"><p class="bubble-label">// JOEY</p><p class="bubble-text">'+joeyLine+'</p></div>'+
+        body+
+        backBtn+
       '</div>'+
     '</div>';
 }
 
+/* ── RESULT + OUTRO (one screen) ── */
 function renderResult(){
-  var winner=getWinner(),seg=SEGMENTS[winner];
-  var joeyLine=JOEY_LINES[seg.joeyLine]||'Nice.';
+  var winner=getWinner();
+  var msg=JOEY_RESULTS[winner];
+  submitToMailchimp(true); /* final submission */
+
   app.innerHTML=
-    '<div class="hud" style="justify-content:center;"><span>GAME CLEAR — FINAL SCORE: '+totalScore()+'</span></div>'+
+    '<div class="hud" style="justify-content:center;"><span>NICE TO MEET YOU</span></div>'+
     '<div class="progress-rail"><div class="progress-fill" style="width:100%"></div></div>'+
     '<div class="joey-layout" style="align-items:flex-start;">'+
-      joeyPanelHTML()+
+      joeyPanel()+
       '<div class="bubble-side fade-in">'+
-        '<div class="speech-bubble">'+
-          '<p class="bubble-label">// JOEY SAYS</p>'+
-          '<p class="bubble-text">'+joeyLine+'</p>'+
+        '<div class="speech-bubble"><p class="bubble-label">// JOEY</p><p class="result-msg">'+msg+'</p></div>'+
+        /* Slap bracelet offer */
+        '<div class="speech-bubble" style="margin-top:6px;">'+
+          '<p class="bubble-label">// ONE MORE THING</p>'+
+          '<p class="result-msg">Want a slap bracelet? I\'ll mail you one.</p>'+
+          '<div class="options-grid" style="grid-template-columns:1fr;margin-top:14px;">'+
+            '<button type="button" class="pxbtn" data-action="slap" data-value="ship"><span class="ltr">&#9654;</span>Ship it to me</button>'+
+            '<button type="button" class="pxbtn" data-action="slap" data-value="voucher"><span class="ltr">&#9654;</span>Email me a voucher instead</button>'+
+            '<button type="button" class="pxbtn" data-action="slap" data-value="person"><span class="ltr">&#9654;</span>I\'ll grab it in person</button>'+
+          '</div>'+
+          '<div id="slap-form"></div>'+
         '</div>'+
-        '<div class="result-badge-inline">'+
-          '<span class="result-icon">'+seg.icon+'</span>'+
-          '<span class="result-name">'+seg.name+'</span>'+
-          '<span class="result-sub">'+seg.tagline+'</span>'+
+        /* Next event */
+        '<div class="event-block">'+
+          '<p class="event-label">// NEXT UP</p>'+
+          '<p class="event-name">'+CONFIG.nextEvent.headline+'</p>'+
+          '<a class="cta-btn" href="'+CONFIG.nextEvent.buttonLink+'" target="_blank">'+CONFIG.nextEvent.buttonText+'</a>'+
         '</div>'+
-        '<p class="cta-msg">'+seg.msg+'</p>'+
-        '<a class="cta-btn" href="'+seg.link()+'" target="_blank">'+seg.cta+'</a>'+
-        '<div style="margin-top:1.2rem;"><button type="button" class="back-btn" data-action="restart">&#8617; PLAY AGAIN</button></div>'+
+        '<div class="nav-row"><button type="button" class="back-btn" data-action="restart">&#8617; START OVER</button></div>'+
       '</div>'+
     '</div>';
+}
+
+/* Slap bracelet sub-flow — reveals the right form. */
+function chooseSlap(choice){
+  addTags(["slap-"+choice]);
+  var box=document.getElementById('slap-form');
+  if(!box)return;
+  if(choice==='ship'){
+    box.innerHTML=
+      '<div class="field"><label>YOUR NAME</label><input id="f-name" type="text"></div>'+
+      '<div class="field"><label>MAILING ADDRESS</label><input id="f-addr" type="text"></div>'+
+      '<div class="nav-row"><button type="button" class="next-btn" id="slap-save" data-action="none">SEND IT &#9654;</button></div>';
+  } else if(choice==='voucher'){
+    box.innerHTML=
+      '<div class="field"><label>YOUR EMAIL</label><input id="f-email" type="email"></div>'+
+      '<div class="nav-row"><button type="button" class="next-btn" id="slap-save" data-action="none">GET VOUCHER &#9654;</button></div>';
+  } else {
+    box.innerHTML='<p class="result-msg" style="margin-top:14px;">Perfect. See you at the arcade. &#128062;</p>';
+  }
+  var save=document.getElementById('slap-save');
+  if(save){
+    save.addEventListener('click',function(){
+      var n=document.getElementById('f-name'),a=document.getElementById('f-addr'),e=document.getElementById('f-email');
+      if(n)userData.name=n.value;
+      if(a)userData.address=a.value;
+      if(e)userData.email=e.value;
+      submitToMailchimp(true);
+      box.innerHTML='<p class="result-msg" style="margin-top:14px;">Got it. Keep an eye on your mailbox. &#128062;</p>';
+    });
+  }
 }
 
 function render(){
@@ -479,69 +526,77 @@ function render(){
   else renderResult();
 }
 
-function scheduleAdvance(){
-  if(advanceTimer)clearTimeout(advanceTimer);
-  advanceTimer=setTimeout(function(){advanceTimer=null;advanceQuestion();},300);
-}
-function selectYesNo(val){
-  if(phase!=='quiz'||advancing)return;
-  state.answers.city_check=val;
-  var btns=app.querySelectorAll('.yes-no-row .pxbtn');
-  btns.forEach(function(b){b.classList.remove('selected');});
-  btns[val==='yes'?0:1].classList.add('selected');
-  scheduleAdvance();
-}
-function cityChosen(val){
-  state.pendingCity=val;
-  var btn=document.getElementById('next-btn');
-  if(btn)btn.disabled=(val==='');
-}
+/* ── ADVANCE LOGIC ── */
+function scheduleAdvance(){if(advanceTimer)clearTimeout(advanceTimer);advanceTimer=setTimeout(function(){advanceTimer=null;advanceQuestion();},300);}
+
 function selectChoice(i,el){
   if(phase!=='quiz'||advancing)return;
   var grid=document.getElementById('opt-grid');
   if(grid)grid.querySelectorAll('.pxbtn').forEach(function(b){b.classList.remove('selected');});
-  el.classList.add('selected');pendingAnswer=i;
+  el.classList.add('selected');
+  pendingAnswer=i;
   scheduleAdvance();
 }
+
+function selectCity(i,el){
+  if(phase!=='quiz'||advancing)return;
+  var grid=document.getElementById('opt-grid');
+  if(grid)grid.querySelectorAll('.pxbtn').forEach(function(b){b.classList.remove('selected');});
+  el.classList.add('selected');
+  pendingAnswer=i;
+  var q=QUESTIONS[currentQ];
+  if(q.options[i].opensDropdown){
+    /* show the dropdown, wait for NEXT */
+    document.getElementById('city-dropdown').style.display='block';
+  } else {
+    /* A/B/C — advance immediately */
+    scheduleAdvance();
+  }
+}
+
 function advanceQuestion(){
   if(phase!=='quiz'||advancing)return;
-  var visible=getVisible(),q=visible[currentQ];
-  if(!q)return;
-  advancing=true;
-  quizHistory.push({currentQ:currentQ,scores:JSON.stringify(scores),state:JSON.stringify(state)});
-  if(q.type==='city_dropdown'){
-    if(!state.pendingCity){advancing=false;return;}
-    state.answers.city_select=state.pendingCity;
-  }else if(q.type==='choice'){
-    if(pendingAnswer===null){advancing=false;return;}
-    var pts=q.options[pendingAnswer].points||{};
-    Object.entries(pts).forEach(function(e){scores[e[0]]=(scores[e[0]]||0)+e[1];});
+  var q=QUESTIONS[currentQ];
+  if(pendingAnswer===null)return;
+  var opt=q.options[pendingAnswer];
+
+  /* city dropdown requires a city picked before NEXT works */
+  if(q.type==='city'&&opt.opensDropdown){
+    if(!pendingCity)return;
+    userData.city=pendingCity;
+    addTags(["city-"+pendingCity.toLowerCase().replace(/[^a-z]/g,'-')]);
   }
-  pendingAnswer=null;
+
+  advancing=true;
+  quizHistory.push({currentQ:currentQ,scores:JSON.stringify(scores),tags:JSON.stringify(userTags),data:JSON.stringify(userData)});
+
+  /* apply vibe + tags */
+  if(opt.vibe)Object.entries(opt.vibe).forEach(function(e){scores[e[0]]=(scores[e[0]]||0)+e[1];});
+  addTags(opt.tags);
+
+  submitToMailchimp(false); /* SILENT SUBMISSION — captures partial quizzes */
+
+  pendingAnswer=null;pendingCity=null;
   currentQ++;
-  visible=getVisible();
-  if(currentQ>=visible.length)phase='result';
+  if(currentQ>=QUESTIONS.length)phase='result';
   render();
   advancing=false;
 }
+
 function goBack(){
   if(!quizHistory.length)return;
-  var prev=quizHistory.pop();
-  currentQ=prev.currentQ;scores=JSON.parse(prev.scores);state=JSON.parse(prev.state);
-  pendingAnswer=null;render();
+  var p=quizHistory.pop();
+  currentQ=p.currentQ;
+  scores=JSON.parse(p.scores);
+  userTags=JSON.parse(p.tags);
+  userData=JSON.parse(p.data);
+  pendingAnswer=null;pendingCity=null;
+  if(phase==='result')phase='quiz';
+  render();
 }
-function startQuiz(){
-  phase='quiz';currentQ=0;
-  scores={fun:0,league:0,event:0,corp:0};
-  state={answers:{},pendingCity:null};
-  pendingAnswer=null;quizHistory=[];render();
-}
-function restart(){
-  phase='intro';currentQ=0;
-  scores={fun:0,league:0,event:0,corp:0};
-  state={answers:{},pendingCity:null};
-  pendingAnswer=null;quizHistory=[];render();
-}
+
+function startQuiz(){phase='quiz';currentQ=0;scores={fun:0,league:0,event:0,corp:0};userTags=[];userData={};pendingAnswer=null;pendingCity=null;quizHistory=[];render();}
+function restart(){phase='intro';currentQ=0;scores={fun:0,league:0,event:0,corp:0};userTags=[];userData={};pendingAnswer=null;pendingCity=null;quizHistory=[];render();}
 
 render();
 </script>
