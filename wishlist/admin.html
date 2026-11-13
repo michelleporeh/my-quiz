@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Edit Wishlist</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=gambetta@500,501&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .hero { padding: 40px 16px 44px; }
+    .title { font-size: clamp(3rem, 12vw, 5.5rem); }
+    main.wrap { padding-top: 36px; padding-bottom: 72px; }
+    .panel {
+      background: var(--espresso); border: 2px solid var(--ink); border-radius: 20px;
+      box-shadow: 6px 6px 0 var(--ink);
+      padding: 24px 22px; margin-bottom: 32px;
+    }
+    .panel.light { background: var(--sky); color: var(--ink); }
+    .panel h2 { font-family: var(--serif); font-weight: 500; font-size: 2rem; letter-spacing: -0.02em; margin: 0 0 4px; }
+    .panel .hint { opacity: 0.75; font-size: 15px; margin: 0 0 18px; }
+    .form { display: grid; gap: 16px; grid-template-columns: repeat(6, 1fr); }
+    .field { display: flex; flex-direction: column; gap: 6px; grid-column: span 6; }
+    .field.half { grid-column: span 3; }
+    .field.third { grid-column: span 2; }
+    .field label { font-size: 15px; font-weight: 700; }
+    .field small { opacity: 0.7; font-size: 13.5px; }
+    .field input[type="text"], .field input[type="url"], .field input[type="number"], .field textarea {
+      background: var(--cream); border: 2px solid var(--ink); border-radius: 12px;
+      padding: 10px 12px 9px; font-size: 16px; color: var(--ink); width: 100%;
+    }
+    .field input:disabled { opacity: 0.45; }
+    .field textarea { min-height: 70px; resize: vertical; }
+    .field input:focus, .field textarea:focus { outline: 2px solid var(--sunshine); outline-offset: 1px; border-color: transparent; }
+    .inline { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .inline input[type="number"] { width: 110px; }
+    .actions { grid-column: span 6; display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .row {
+      display: flex; align-items: center; gap: 14px; padding: 12px 14px;
+      background: var(--cream); color: var(--ink); border: 2px solid var(--ink); border-radius: 14px;
+    }
+    .row.editing { background: var(--sunshine); }
+    .row .rank { width: 40px; height: 40px; font-size: 1rem; }
+    .row .rank.top { background: var(--sky); }
+    .row-main { flex: 1; min-width: 0; }
+    .row-name { font-family: var(--serif); font-weight: 500; font-size: 1.4rem; line-height: 1.1; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+    .row-meta { font-size: 14px; opacity: 0.7; }
+    .row-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; --fg: var(--ink); }
+    .row-btns .btn { padding: 6px 14px 5px; font-size: 14px; }
+    .row-btns .btn-danger { color: var(--copper); border-color: var(--copper); }
+    .icon-btn {
+      width: 34px; height: 34px; border-radius: 999px; border: 2px solid var(--ink); background: transparent;
+      cursor: pointer; color: var(--ink); display: grid; place-items: center; font-size: 15px; font-weight: 700;
+    }
+    .icon-btn:hover:not(:disabled) { background: var(--ink); color: var(--cream); }
+    .icon-btn:disabled { opacity: 0.25; cursor: default; }
+    .topnav {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+      display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; font-size: 15px; font-weight: 500;
+    }
+    .topnav a { text-decoration: underline; text-underline-offset: 3px; }
+    .topnav .btn { padding: 5px 14px 4px; font-size: 14px; border-color: var(--cream); color: var(--cream); }
+
+    @media (max-width: 640px) {
+      .field.half, .field.third { grid-column: span 6; }
+      .row { flex-wrap: wrap; }
+      .row-btns { width: 100%; justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <nav class="topnav">
+      <a href="./">← View the wishlist</a>
+      <button class="btn btn-ghost" id="logout" hidden>Sign out</button>
+    </nav>
+    <div class="hero-inner" style="padding-top: 24px">
+      <h1 class="title"><em>Chapter</em> <span class="num">26</span></h1>
+      <p class="subtitle">Edit your wishes</p>
+    </div>
+  </header>
+  <div class="marquee" aria-hidden="true"><div class="marquee-track" style="animation: none; padding-left: 16px"><span>Claims never show up on this page</span></div></div>
+
+  <main class="wrap">
+    <div id="preview-notice" class="notice" hidden>
+      <strong>Preview mode.</strong> Changes are saved only in this browser until you connect the backend.
+    </div>
+
+    <!-- key gate -->
+    <section id="gate" class="panel" hidden>
+      <h2>Your admin key</h2>
+      <p class="hint">Paste the key from the Apps Script log (see SETUP.md). It's remembered on this device, and this device will stop showing claims.</p>
+      <form id="gate-form" class="inline">
+        <div class="field" style="flex:1; min-width: 220px">
+          <input type="text" id="key" autocomplete="off" spellcheck="false" placeholder="admin key" required>
+        </div>
+        <button class="btn btn-yellow" type="submit">Unlock</button>
+      </form>
+    </section>
+
+    <div id="editor" hidden>
+      <section class="panel">
+        <h2 id="form-title">Add a wish</h2>
+        <p class="hint">Rank 1 is what you want most. Pick any rank and everything else slides to make room.</p>
+        <form id="item-form" class="form">
+          <input type="hidden" name="id">
+          <div class="field">
+            <label for="f-name">Item *</label>
+            <input type="text" id="f-name" name="name" required maxlength="140">
+          </div>
+          <div class="field half">
+            <label for="f-link">Link</label>
+            <input type="url" id="f-link" name="link" placeholder="https://">
+          </div>
+          <div class="field half">
+            <label for="f-store">Store</label>
+            <input type="text" id="f-store" name="store" maxlength="80">
+          </div>
+          <div class="field third">
+            <label for="f-price">Price ($)</label>
+            <input type="number" id="f-price" name="price" min="0" step="0.01" inputmode="decimal">
+          </div>
+          <div class="field third">
+            <label for="f-rank">Ranking</label>
+            <input type="number" id="f-rank" name="rank" min="1" step="1" inputmode="numeric">
+            <small id="rank-hint"></small>
+          </div>
+          <div class="field third">
+            <label for="f-qty">How many?</label>
+            <div class="inline">
+              <input type="number" id="f-qty" name="quantity" min="1" step="1" value="1" inputmode="numeric">
+              <label class="toggle"><input type="checkbox" id="f-unlimited"> No limit</label>
+            </div>
+            <small>1 = once someone claims it, it's closed</small>
+          </div>
+          <div class="field">
+            <label for="f-notes">Notes</label>
+            <textarea id="f-notes" name="notes" maxlength="400" placeholder="Size, color, any shade of green…"></textarea>
+          </div>
+          <div class="field">
+            <label for="f-image">Image link (optional)</label>
+            <input type="url" id="f-image" name="image" placeholder="https://…jpg">
+          </div>
+          <div class="actions">
+            <button class="btn btn-yellow" type="submit" id="save-btn">Add to list</button>
+            <button class="btn btn-ghost" type="button" id="cancel-btn" hidden>Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel light">
+        <h2>Your list</h2>
+        <p class="hint">Use the arrows to re-rank.</p>
+        <ul id="rows" class="rows"></ul>
+      </section>
+    </div>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script>
+  (function () {
+    const API = window.WishlistAPI;
+    const KEY_STORE = 'wishlist-admin-key';
+    let key = API.store.get(KEY_STORE, '');
+    let items = [];
+    let busy = false;
+
+    const $ = (id) => document.getElementById(id);
+    const form = $('item-form');
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const money = (n) => n == null || n === '' || isNaN(n) ? '' : '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+    function toast(msg) {
+      const t = $('toast'); t.textContent = msg; t.classList.add('show');
+      clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600);
+    }
+
+    if (API.preview) $('preview-notice').hidden = false;
+
+    function markOwner() { API.store.set('wishlist-owner', true); }
+
+    function showGate() { $('gate').hidden = false; $('editor').hidden = true; $('logout').hidden = true; }
+    function showEditor() { $('gate').hidden = true; $('editor').hidden = false; $('logout').hidden = API.preview; }
+
+    async function unlock() {
+      try {
+        const data = await API.adminList(key);
+        items = data.items || [];
+        markOwner();
+        showEditor();
+        resetForm();
+        renderRows();
+      } catch (e) {
+        API.store.set(KEY_STORE, '');
+        key = '';
+        showGate();
+        if (e.message) toast(e.message);
+      }
+    }
+
+    $('gate-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      key = $('key').value.trim();
+      API.store.set(KEY_STORE, key);
+      unlock();
+    });
+    $('logout').addEventListener('click', () => {
+      API.store.set(KEY_STORE, '');
+      key = '';
+      showGate();
+    });
+
+    // ---------- form ----------
+    const unlimited = $('f-unlimited');
+    const qty = $('f-qty');
+    unlimited.addEventListener('change', () => { qty.disabled = unlimited.checked; });
+
+    function resetForm() {
+      form.reset();
+      form.id.value = '';
+      qty.disabled = false;
+      $('f-rank').value = items.length + 1;
+      $('rank-hint').textContent = `1 – ${items.length + 1}`;
+      $('form-title').textContent = 'Add a wish';
+      $('save-btn').textContent = 'Add to list';
+      $('cancel-btn').hidden = true;
+      renderRows();
+    }
+
+    function editItem(id) {
+      const it = items.find(x => x.id === id);
+      if (!it) return;
+      form.id.value = it.id;
+      form.name.value = it.name || '';
+      form.link.value = it.link || '';
+      form.store.value = it.store || '';
+      form.price.value = it.price == null ? '' : it.price;
+      form.rank.value = it.rank;
+      form.notes.value = it.notes || '';
+      form.image.value = it.image || '';
+      unlimited.checked = it.quantity === 0;
+      qty.value = it.quantity || 1;
+      qty.disabled = unlimited.checked;
+      $('rank-hint').textContent = `1 – ${items.length}`;
+      $('form-title').textContent = 'Edit wish';
+      $('save-btn').textContent = 'Save changes';
+      $('cancel-btn').hidden = false;
+      renderRows();
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      form.name.focus({ preventScroll: true });
+    }
+    $('cancel-btn').addEventListener('click', resetForm);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (busy) return;
+      const item = {
+        id: form.id.value || undefined,
+        name: form.name.value,
+        link: form.link.value,
+        store: form.store.value,
+        price: form.price.value,
+        rank: form.rank.value,
+        quantity: unlimited.checked ? 0 : (parseInt(qty.value, 10) || 1),
+        notes: form.notes.value,
+        image: form.image.value,
+      };
+      busy = true; $('save-btn').disabled = true;
+      try {
+        const res = await API.saveItem(key, item);
+        items = res.items;
+        toast(item.id ? 'Saved ✦' : 'Added ✦');
+        resetForm();
+      } catch (err) {
+        toast(err.message || 'Could not save');
+      } finally {
+        busy = false; $('save-btn').disabled = false;
+      }
+    });
+
+    // ---------- list ----------
+    function renderRows() {
+      const editing = form.id.value;
+      const rows = $('rows');
+      if (!items.length) { rows.innerHTML = '<li class="empty" style="padding:24px 0">No wishes yet. Add your first one above.</li>'; return; }
+      rows.innerHTML = items.map((it, i) => `
+        <li class="row ${editing === it.id ? 'editing' : ''}">
+          <span class="rank ${it.rank <= 3 ? 'top' : ''}">#${esc(it.rank)}</span>
+          <div class="row-main">
+            <div class="row-name">${esc(it.name)}</div>
+            <div class="row-meta">${[money(it.price), it.store, it.quantity === 0 ? 'no limit' : (it.quantity === 1 ? 'just one' : 'up to ' + it.quantity)].filter(Boolean).map(esc).join(' · ')}</div>
+          </div>
+          <div class="row-btns">
+            <button class="icon-btn" data-move="up" data-id="${esc(it.id)}" ${i === 0 ? 'disabled' : ''} aria-label="Move up">↑</button>
+            <button class="icon-btn" data-move="down" data-id="${esc(it.id)}" ${i === items.length - 1 ? 'disabled' : ''} aria-label="Move down">↓</button>
+            <button class="btn btn-ghost" data-edit="${esc(it.id)}">Edit</button>
+            <button class="btn btn-danger" data-del="${esc(it.id)}">Delete</button>
+          </div>
+        </li>`).join('');
+    }
+
+    $('rows').addEventListener('click', async (e) => {
+      const btn = e.target.closest('button');
+      if (!btn || busy) return;
+      if (btn.dataset.edit) { editItem(btn.dataset.edit); return; }
+      try {
+        busy = true;
+        if (btn.dataset.move) {
+          items = (await API.move(key, btn.dataset.id, btn.dataset.move)).items;
+        } else if (btn.dataset.del) {
+          const it = items.find(x => x.id === btn.dataset.del);
+          if (!confirm(`Remove "${it ? it.name : 'this item'}" from your list?`)) return;
+          items = (await API.deleteItem(key, btn.dataset.del)).items;
+          if (form.id.value === btn.dataset.del) { busy = false; resetForm(); }
+          toast('Removed');
+        }
+        renderRows();
+        if (!form.id.value) { $('f-rank').value = items.length + 1; $('rank-hint').textContent = `1 – ${items.length + 1}`; }
+      } catch (err) {
+        toast(err.message || 'Something went wrong');
+      } finally {
+        busy = false;
+      }
+    });
+
+    // ---------- start ----------
+    if (API.preview || key) unlock(); else showGate();
+  })();
+  </script>
+</body>
+</html>

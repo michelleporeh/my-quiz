@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chapter 26</title>
+  <meta name="description" content="Michelle Poreh's Wishes">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=gambetta@500,501&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="star" viewBox="0 0 100 100"><path d="M50 3l13.6 30.3 33 3.6-24.6 22.3 6.9 32.5L50 75.1 21.1 91.7 28 59.2 3.4 36.9l33-3.6z"/></symbol>
+  </svg>
+
+  <header class="hero">
+    <svg class="star" style="top:22px;left:6%;--s:46px;--r:-12deg"><use href="#star"/></svg>
+    <svg class="star optional" style="top:38%;left:3%;--s:30px;--r:14deg"><use href="#star"/></svg>
+    <svg class="star" style="bottom:26px;left:14%;--s:36px;--r:8deg"><use href="#star"/></svg>
+    <svg class="star" style="top:30px;right:9%;--s:34px;--r:20deg"><use href="#star"/></svg>
+    <svg class="star optional" style="top:50%;right:4%;--s:50px;--r:-6deg"><use href="#star"/></svg>
+    <svg class="star" style="bottom:22px;right:18%;--s:28px;--r:-18deg"><use href="#star"/></svg>
+    <div class="hero-inner">
+      <div class="tag">the wishlist</div>
+      <h1 class="title"><em>Chapter</em> <span class="num">26</span></h1>
+      <p class="subtitle">Michelle Poreh's Wishes</p>
+      <p class="intro">Getting me something? Tap <strong>Claim</strong> so nobody doubles up. No names, and you can unclaim if plans change.</p>
+    </div>
+  </header>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marquee"></div>
+  </div>
+
+  <section class="list-section">
+  <div class="wrap">
+    <div id="owner-notice" class="notice" hidden>
+      <strong>No peeking!</strong> This device belongs to the birthday star, so claims are hidden here.
+      <a href="admin.html">Edit your list</a>
+    </div>
+    <div id="preview-notice" class="notice" hidden>
+      <strong>Preview mode.</strong> Nothing is shared yet. Add your Apps Script URL to <code>config.js</code> to go live.
+    </div>
+
+    <div class="toolbar">
+      <div class="segmented" role="group" aria-label="Sort">
+        <span class="label">Sort</span>
+        <button type="button" data-sort="rank" aria-pressed="true">Most wanted</button>
+        <button type="button" data-sort="price-asc" aria-pressed="false">Price: low → high</button>
+        <button type="button" data-sort="price-desc" aria-pressed="false">Price: high → low</button>
+      </div>
+      <label class="toggle" id="hide-claimed-wrap">
+        <input type="checkbox" id="hide-claimed"> Hide claimed
+      </label>
+    </div>
+
+    <main id="grid" class="grid" aria-live="polite">
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+    </main>
+
+    <p class="footer-note">thank you for celebrating with me</p>
+  </div>
+  </section>
+
+  <div class="marquee sky" aria-hidden="true">
+    <div class="marquee-track" id="marquee-2" style="animation-direction: reverse"></div>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script>
+  (function () {
+    const API = window.WishlistAPI;
+    const MINE_KEY = 'wishlist-my-claims';     // { itemId: [token, ...] }
+    const PREFS_KEY = 'wishlist-prefs';
+    const isOwner = !!API.store.get('wishlist-owner', false);
+
+    let items = [];
+    let mine = API.store.get(MINE_KEY, {});
+    const prefs = Object.assign({ sort: 'rank', hideClaimed: false }, API.store.get(PREFS_KEY, {}));
+    const busy = new Set();
+
+    const grid = document.getElementById('grid');
+    const hideClaimed = document.getElementById('hide-claimed');
+
+    if (isOwner) {
+      document.getElementById('owner-notice').hidden = false;
+      document.getElementById('hide-claimed-wrap').hidden = true;
+    }
+    if (API.preview) document.getElementById('preview-notice').hidden = false;
+
+    // Scrolling banners: the phrase list is repeated twice so the loop is seamless.
+    const starSvg = '<svg viewBox="0 0 100 100" width="16" height="16" style="vertical-align:-2px"><use href="#star"/></svg>';
+    function fillMarquee(id, phrases) {
+      const once = phrases.map(p => `<span>${p}</span><span class="sep">${starSvg}</span>`).join('');
+      document.getElementById(id).innerHTML = once.repeat(4);
+    }
+    fillMarquee('marquee', ['Chapter 26', 'Claim it so nobody doubles up', 'No names needed', 'Unclaim anytime']);
+    fillMarquee('marquee-2', ['Thank you', 'Chapter 26', 'Michelle Poreh’s Wishes', 'See you at the party']);
+
+    // ---------- helpers ----------
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const safeUrl = (u) => /^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '';
+    const money = (n) => n == null || n === '' || isNaN(n) ? '' :
+      '$' + Number(n).toLocaleString(undefined, { minimumFractionDigits: Number(n) % 1 ? 2 : 0, maximumFractionDigits: 2 });
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600);
+    }
+    function savePrefs() { API.store.set(PREFS_KEY, prefs); }
+    function myTokens(id) { return mine[id] || []; }
+
+    function qtyText(it) {
+      if (isOwner) {
+        if (it.quantity === 0) return 'Any number welcome';
+        return it.quantity === 1 ? 'Just one' : 'Up to ' + it.quantity;
+      }
+      if (it.quantity === 0) {
+        return it.claimed ? `As many as you like · ${it.claimed} claimed` : 'As many as you like';
+      }
+      if (it.quantity === 1) return 'Just one needed';
+      return `${Math.min(it.claimed, it.quantity)} of ${it.quantity} claimed`;
+    }
+
+    // ---------- render ----------
+    function sortedItems() {
+      const list = items.slice();
+      const price = (x) => (x.price == null || isNaN(x.price)) ? null : Number(x.price);
+      if (prefs.sort === 'rank') list.sort((a, b) => a.rank - b.rank);
+      else {
+        const dir = prefs.sort === 'price-asc' ? 1 : -1;
+        list.sort((a, b) => {
+          const pa = price(a), pb = price(b);
+          if (pa == null && pb == null) return a.rank - b.rank;
+          if (pa == null) return 1;          // no price → always at the end
+          if (pb == null) return -1;
+          return (pa - pb) * dir || a.rank - b.rank;
+        });
+      }
+      return list;
+    }
+
+    function render() {
+      document.querySelectorAll('[data-sort]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.sort === prefs.sort)));
+      hideClaimed.checked = prefs.hideClaimed;
+
+      let list = sortedItems();
+      if (!isOwner && prefs.hideClaimed) {
+        list = list.filter(it => !(it.quantity > 0 && it.claimed >= it.quantity) || myTokens(it.id).length);
+      }
+      if (!list.length) {
+        grid.innerHTML = `<p class="empty">${items.length ? 'Everything has been claimed — thank you! ✦' : 'The list is still being written…'}</p>`;
+        return;
+      }
+      grid.innerHTML = list.map(cardHtml).join('');
+    }
+
+    // Each item keeps the same color no matter how the list is sorted.
+    function colorClass(it) { return 'c' + ((Number(it.rank) - 1) % 4 + 4) % 4; }
+
+    function cardHtml(it) {
+      const mineCount = isOwner ? 0 : myTokens(it.id).length;
+      const full = !isOwner && it.quantity > 0 && it.claimed >= it.quantity;
+      const link = safeUrl(it.link);
+      const img = safeUrl(it.image);
+      const loading = busy.has(it.id);
+
+      let foot = '';
+      if (!isOwner) {
+        if (mineCount) {
+          foot = `<span class="status mine">✓ You claimed this${mineCount > 1 ? ' ×' + mineCount : ''}</span>
+                  <button class="btn btn-ghost" data-unclaim="${esc(it.id)}" ${loading ? 'disabled' : ''}>Unclaim</button>`;
+          if (!full && it.quantity !== 1) {
+            foot += `<button class="btn btn-ghost" data-claim="${esc(it.id)}" ${loading ? 'disabled' : ''}>+1</button>`;
+          }
+        } else if (full) {
+          foot = '';
+        } else {
+          foot = `<button class="btn btn-primary" data-claim="${esc(it.id)}" ${loading ? 'disabled' : ''}>${loading ? 'Claiming…' : 'Claim'}</button>`;
+        }
+      }
+      if (link) foot += `<a class="link" href="${esc(link)}" target="_blank" rel="noopener noreferrer">View ${it.store ? 'at ' + esc(it.store) : 'item'} ↗</a>`;
+
+      return `
+        <article class="card ${colorClass(it)} ${full ? 'is-full' : ''} ${mineCount ? 'is-mine' : ''}">
+          ${full && !mineCount ? '<span class="stamp">Claimed</span>' : ''}
+          ${img ? `<div class="card-img"><img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer"></div>` : ''}
+          <div class="card-body">
+            <div class="card-top">
+              <span class="rank ${it.rank <= 3 ? 'top' : ''}" title="Wish ranking">#${esc(it.rank)}</span>
+              <h2 class="name">${esc(it.name)}</h2>
+            </div>
+            <div class="meta">
+              ${money(it.price) ? `<span class="price">${money(it.price)}</span>` : ''}
+              ${it.store && !link ? `<span>${esc(it.store)}</span>` : ''}
+              <span class="qty">${qtyText(it)}</span>
+            </div>
+            ${it.notes ? `<p class="notes">${esc(it.notes)}</p>` : ''}
+            <div class="card-foot">${foot}</div>
+          </div>
+        </article>`;
+    }
+
+    // ---------- actions ----------
+    async function load() {
+      try {
+        const data = await API.list();
+        items = data.items || [];
+        // Forget local claims for items that no longer exist.
+        Object.keys(mine).forEach(id => { if (!items.some(it => it.id === id)) delete mine[id]; });
+        API.store.set(MINE_KEY, mine);
+        render();
+      } catch (e) {
+        grid.innerHTML = `<p class="empty">Couldn't load the list. Please refresh in a moment.</p>`;
+      }
+    }
+
+    async function claim(id) {
+      busy.add(id); render();
+      try {
+        const res = await API.claim(id);
+        mine[id] = myTokens(id).concat(res.token);
+        API.store.set(MINE_KEY, mine);
+        items = res.items;
+        toast('Claimed ✦ thank you!');
+      } catch (e) {
+        if (e.items) items = e.items;
+        toast(e.message || 'Something went wrong, try again');
+      } finally {
+        busy.delete(id); render();
+      }
+    }
+
+    async function unclaim(id) {
+      const tokens = myTokens(id);
+      if (!tokens.length) return;
+      busy.add(id); render();
+      const dropToken = () => {
+        mine[id] = tokens.slice(0, -1);
+        if (!mine[id].length) delete mine[id];
+        API.store.set(MINE_KEY, mine);
+      };
+      try {
+        const res = await API.unclaim(id, tokens[tokens.length - 1]);
+        items = res.items;
+        dropToken();
+        toast('Unclaimed — it’s back on the list');
+      } catch (e) {
+        // The server answered (claim already gone): forget the token.
+        // A network error: keep it so they can try again.
+        if (e.items) { items = e.items; dropToken(); }
+        toast(e.message || 'Something went wrong, try again');
+      } finally {
+        busy.delete(id); render();
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      const s = e.target.closest('[data-sort]');
+      if (s) { prefs.sort = s.dataset.sort; savePrefs(); render(); return; }
+      const c = e.target.closest('[data-claim]');
+      if (c) { claim(c.dataset.claim); return; }
+      const u = e.target.closest('[data-unclaim]');
+      if (u) { unclaim(u.dataset.unclaim); }
+    });
+    hideClaimed.addEventListener('change', () => { prefs.hideClaimed = hideClaimed.checked; savePrefs(); render(); });
+
+    load();
+  })();
+  </script>
+</body>
+</html>
