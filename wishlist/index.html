@@ -6,10 +6,7 @@
   <title>Chapter 26</title>
   <meta name="description" content="Michelle Poreh's Wishes">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-  <link href="https://api.fontshare.com/v2/css?f[]=gambetta@500,501&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=gambetta@600,700,601,701&f[]=switzer@300,400,500,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,11 +16,11 @@
 
   <header class="hero">
     <svg class="star" style="top:22px;left:6%;--s:46px;--r:-12deg"><use href="#star"/></svg>
-    <svg class="star optional" style="top:38%;left:3%;--s:30px;--r:14deg"><use href="#star"/></svg>
+    <svg class="star pink optional" style="top:38%;left:3%;--s:30px;--r:14deg"><use href="#star"/></svg>
     <svg class="star" style="bottom:26px;left:14%;--s:36px;--r:8deg"><use href="#star"/></svg>
     <svg class="star" style="top:30px;right:9%;--s:34px;--r:20deg"><use href="#star"/></svg>
     <svg class="star optional" style="top:50%;right:4%;--s:50px;--r:-6deg"><use href="#star"/></svg>
-    <svg class="star" style="bottom:22px;right:18%;--s:28px;--r:-18deg"><use href="#star"/></svg>
+    <svg class="star pink" style="bottom:22px;right:18%;--s:28px;--r:-18deg"><use href="#star"/></svg>
     <div class="hero-inner">
       <div class="tag">the wishlist</div>
       <h1 class="title"><em>Chapter</em> <span class="num">26</span></h1>
@@ -50,8 +47,8 @@
       <div class="segmented" role="group" aria-label="Sort">
         <span class="label">Sort</span>
         <button type="button" data-sort="rank" aria-pressed="true">Most wanted</button>
-        <button type="button" data-sort="price-asc" aria-pressed="false">Price: low → high</button>
-        <button type="button" data-sort="price-desc" aria-pressed="false">Price: high → low</button>
+        <button type="button" data-sort="price-asc" aria-pressed="false" aria-label="Price, low to high">Price ↑</button>
+        <button type="button" data-sort="price-desc" aria-pressed="false" aria-label="Price, high to low">Price ↓</button>
       </div>
       <label class="toggle" id="hide-claimed-wrap">
         <input type="checkbox" id="hide-claimed"> Hide claimed
@@ -66,7 +63,7 @@
   </div>
   </section>
 
-  <div class="marquee sky" aria-hidden="true">
+  <div class="marquee pink" aria-hidden="true">
     <div class="marquee-track" id="marquee-2" style="animation-direction: reverse"></div>
   </div>
   <div id="toast" class="toast" role="status"></div>
@@ -162,7 +159,7 @@
     }
 
     // Each item keeps the same color no matter how the list is sorted.
-    function colorClass(it) { return 'c' + ((Number(it.rank) - 1) % 4 + 4) % 4; }
+    function colorClass(it) { return 'c' + ((Number(it.rank) - 1) % 6 + 6) % 6; }
 
     function cardHtml(it) {
       const mineCount = isOwner ? 0 : myTokens(it.id).length;
@@ -174,7 +171,7 @@
       let foot = '';
       if (!isOwner) {
         if (mineCount) {
-          foot = `<span class="status mine">✓ You claimed this${mineCount > 1 ? ' ×' + mineCount : ''}</span>
+          foot = `<span class="status mine">✓ Yours${mineCount > 1 ? ' ×' + mineCount : ''}</span>
                   <button class="btn btn-ghost" data-unclaim="${esc(it.id)}" ${loading ? 'disabled' : ''}>Unclaim</button>`;
           if (!full && it.quantity !== 1) {
             foot += `<button class="btn btn-ghost" data-claim="${esc(it.id)}" ${loading ? 'disabled' : ''}>+1</button>`;
@@ -185,7 +182,9 @@
           foot = `<button class="btn btn-primary" data-claim="${esc(it.id)}" ${loading ? 'disabled' : ''}>${loading ? 'Claiming…' : 'Claim'}</button>`;
         }
       }
-      if (link) foot += `<a class="link" href="${esc(link)}" target="_blank" rel="noopener noreferrer">View ${it.store ? 'at ' + esc(it.store) : 'item'} ↗</a>`;
+      const linkHtml = link
+        ? `<a class="link" href="${esc(link)}" target="_blank" rel="noopener noreferrer">View ${it.store ? 'at ' + esc(it.store) : 'item'} ↗</a>`
+        : '';
 
       return `
         <article class="card ${colorClass(it)} ${full ? 'is-full' : ''} ${mineCount ? 'is-mine' : ''}">
@@ -202,7 +201,8 @@
               <span class="qty">${qtyText(it)}</span>
             </div>
             ${it.notes ? `<p class="notes">${esc(it.notes)}</p>` : ''}
-            <div class="card-foot">${foot}</div>
+            ${linkHtml ? `<div>${linkHtml}</div>` : ''}
+            ${foot ? `<div class="card-foot">${foot}</div>` : ''}
           </div>
         </article>`;
     }
